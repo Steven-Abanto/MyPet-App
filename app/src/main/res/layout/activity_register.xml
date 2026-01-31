@@ -20,6 +20,12 @@
             android:layout_margin="16dp"
             android:orientation="vertical">
 
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                app:tint="#41D113"
+                android:src="@drawable/ic_add_person"/>
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
