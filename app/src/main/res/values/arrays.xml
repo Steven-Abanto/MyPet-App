@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="pronombres">
+        <item>Seleccione pronombre</item>
+        <item>Él</item>
+        <item>Ella</item>
+        <item>Otro</item>
+    </string-array>
+</resources>
