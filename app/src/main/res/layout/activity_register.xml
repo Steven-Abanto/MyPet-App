@@ -23,7 +23,7 @@
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="80dp"
-                app:tint="#41D113"
+                app:tint="#6DE1F8"
                 android:src="@drawable/ic_add_person"/>
 
             <TextView
@@ -32,7 +32,7 @@
                 android:layout_marginVertical="10dp"
                 android:text="Registro de usuario"
                 android:textAlignment="center"
-                android:textColor="#4D97F0"
+                android:textColor="#8BC34A"
                 android:textSize="32sp"
                 android:textStyle="bold" />
 
@@ -45,9 +45,11 @@
                 app:boxCornerRadiusBottomStart="18dp"
                 app:boxCornerRadiusTopEnd="18dp"
                 app:boxCornerRadiusTopStart="18dp"
-                app:boxStrokeColor="#000000"
                 app:boxStrokeWidth="1dp"
                 app:counterEnabled="true"
+                app:boxStrokeColor="#8BC34A"
+                app:hintTextColor="#8BC34A"
+                android:textColorHint="#A9A9A9"
                 app:counterMaxLength="30">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -77,7 +79,9 @@
                     app:boxCornerRadiusBottomStart="18dp"
                     app:boxCornerRadiusTopEnd="18dp"
                     app:boxCornerRadiusTopStart="18dp"
-                    app:boxStrokeColor="#000000"
+                    app:boxStrokeColor="#8BC34A"
+                    app:hintTextColor="#8BC34A"
+                    android:textColorHint="#A9A9A9"
                     app:boxStrokeWidth="1dp"
                     app:counterEnabled="true"
                     app:counterMaxLength="30">
@@ -103,7 +107,9 @@
                     app:boxCornerRadiusBottomStart="18dp"
                     app:boxCornerRadiusTopEnd="18dp"
                     app:boxCornerRadiusTopStart="18dp"
-                    app:boxStrokeColor="#000000"
+                    app:boxStrokeColor="#8BC34A"
+                    app:hintTextColor="#8BC34A"
+                    android:textColorHint="#A9A9A9"
                     app:boxStrokeWidth="1dp"
                     app:counterEnabled="true"
                     app:counterMaxLength="30">
@@ -129,7 +135,9 @@
                 app:boxCornerRadiusBottomStart="18dp"
                 app:boxCornerRadiusTopEnd="18dp"
                 app:boxCornerRadiusTopStart="18dp"
-                app:boxStrokeColor="#000000"
+                app:boxStrokeColor="#8BC34A"
+                app:hintTextColor="#8BC34A"
+                android:textColorHint="#A9A9A9"
                 app:boxStrokeWidth="1dp"
                 app:counterEnabled="true"
                 app:counterMaxLength="9">
@@ -153,7 +161,9 @@
                 app:boxCornerRadiusBottomStart="18dp"
                 app:boxCornerRadiusTopEnd="18dp"
                 app:boxCornerRadiusTopStart="18dp"
-                app:boxStrokeColor="#000000"
+                app:boxStrokeColor="#8BC34A"
+                app:hintTextColor="#8BC34A"
+                android:textColorHint="#A9A9A9"
                 app:boxStrokeWidth="1dp"
                 app:counterEnabled="true"
                 app:counterMaxLength="60">
@@ -177,7 +187,9 @@
                 app:boxCornerRadiusBottomStart="18dp"
                 app:boxCornerRadiusTopEnd="18dp"
                 app:boxCornerRadiusTopStart="18dp"
-                app:boxStrokeColor="#000000"
+                app:boxStrokeColor="#8BC34A"
+                app:hintTextColor="#8BC34A"
+                android:textColorHint="#A9A9A9"
                 app:boxStrokeWidth="1dp"
                 app:counterEnabled="true"
                 app:counterMaxLength="16"
@@ -223,8 +235,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="Él"
-                            android:textSize="15sp"
-                            android:textStyle="bold" />
+                            android:textSize="15sp" />
 
                         <RadioButton
                             android:id="@+id/idPronombreElla"
@@ -232,8 +243,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="Ella"
-                            android:textSize="15sp"
-                            android:textStyle="bold" />
+                            android:textSize="15sp" />
 
                         <RadioButton
                             android:id="@+id/idPronombreOtro"
@@ -241,18 +251,22 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="Otro"
-                            android:textSize="15sp"
-                            android:textStyle="bold" />
+                            android:textSize="15sp" />
                     </RadioGroup>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
 
-            <CheckBox
+            <com.google.android.material.checkbox.MaterialCheckBox
+                android:id="@+id/termsCheckBox"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
                 android:text="Acepto los Términos y Condiciones"
-                android:textStyle="bold" />
+                android:textColor="#616161"
+                android:checked="true"
+                app:buttonTint="#6DE1F8"
+                app:useMaterialThemeColors="false"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -263,9 +277,8 @@
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:backgroundTint="#73FB46"
+                    android:backgroundTint="#8BC34A"
                     android:text="Registrar"
-                    android:textColor="#2E2E2E"
                     android:textStyle="bold" />
             </LinearLayout>
 
