@@ -24,6 +24,9 @@ class HomeActivity : AppCompatActivity() {
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation)
         val tvContent = findViewById<android.widget.TextView>(R.id.tvContent)
 
+        //Se marca "Inicio" por defecto
+        bottomNavigationView.selectedItemId = R.id.navigation_home
+
         //Configurar el listener para los clicks
         bottomNavigationView.setOnItemSelectedListener { item ->
             when (item.itemId) {
@@ -49,7 +52,5 @@ class HomeActivity : AppCompatActivity() {
             }
         }
 
-        //Se marca "Inicio" por defecto
-        bottomNavigationView.selectedItemId = R.id.navigation_home
     }
 }

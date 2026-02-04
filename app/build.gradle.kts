@@ -49,5 +49,4 @@ dependencies {
     //Navegación para navbar inferior
     implementation("androidx.navigation:navigation-fragment-ktx:2.7.6")
     implementation("androidx.navigation:navigation-ui-ktx:2.7.6")
-    implementation("com.google.android.material:material:1.11.0")
 }
