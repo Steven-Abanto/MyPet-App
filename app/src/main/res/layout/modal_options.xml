@@ -32,7 +32,7 @@
         android:layout_margin="15dp"
         android:text="Eliminar"
         android:backgroundTint="#E23B3B"
-        app:icon="@drawable/ic_trash"/>
+        app:icon="@drawable/ic_dog"/>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/mbCancelar"
@@ -41,6 +41,6 @@
         android:layout_margin="15dp"
         android:text="Cancelar"
         android:backgroundTint="#E0DD4A"
-        app:icon="@drawable/ic_close"/>
+        app:icon="@drawable/ic_cat"/>
 
 </LinearLayout>

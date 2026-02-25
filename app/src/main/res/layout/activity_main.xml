@@ -7,27 +7,42 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
+    android:padding="16dp"
     tools:context=".MainActivity">
 
     <ImageView
-        android:id="@+id/tvHome"
+        android:id="@+id/ivLogo"
         android:layout_width="match_parent"
         android:layout_height="120dp"
         android:src="@drawable/ic_logo_mypet"
         app:tint="#6DE1F8"/>
 
     <TextView
-        android:id="@+id/tvRegister"
+        android:id="@+id/tvTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="40sp"
         android:textColor="#8BC34A"
         android:text="MyPet"
         android:fontFamily="@font/milkshake"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/btnLogin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:layout_marginHorizontal="32dp"
+        android:text="Iniciar sesión"
+        android:backgroundTint="#8BC34A"/>
+
+    <Button
+        android:id="@+id/btnRegister"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginHorizontal="32dp"
+        android:text="Registrarse"
+        android:backgroundTint="#6DE1F8"/>
 
 </LinearLayout>

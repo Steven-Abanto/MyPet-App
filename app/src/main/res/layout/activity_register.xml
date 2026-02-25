@@ -37,6 +37,7 @@
                 android:textStyle="bold" />
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingVertical="1dp"
@@ -53,6 +54,7 @@
                 app:counterMaxLength="30">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Nombre"
@@ -69,6 +71,7 @@
                 android:weightSum="2">
 
                 <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilLastNameP"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -87,6 +90,7 @@
                     app:counterMaxLength="30">
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etLastNameP"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Apellido Paterno"
@@ -97,6 +101,7 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilLastNameM"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -115,6 +120,7 @@
                     app:counterMaxLength="30">
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etLastNameM"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Apellido Materno"
@@ -127,6 +133,7 @@
             </LinearLayout>
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilPhone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingVertical="1dp"
@@ -143,6 +150,7 @@
                 app:counterMaxLength="9">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etPhone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Celular (Opcional)"
@@ -153,6 +161,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingVertical="1dp"
@@ -169,6 +178,7 @@
                 app:counterMaxLength="60">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etEmail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Correo Electrónico"
@@ -179,6 +189,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingVertical="1dp"
@@ -196,6 +207,7 @@
                 app:passwordToggleEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etPassword"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Contraseña"
@@ -204,15 +216,45 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilConfirmPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingVertical="1dp"
+                app:boxBackgroundColor="@color/white"
+                app:boxCornerRadiusBottomEnd="18dp"
+                app:boxCornerRadiusBottomStart="18dp"
+                app:boxCornerRadiusTopEnd="18dp"
+                app:boxCornerRadiusTopStart="18dp"
+                app:boxStrokeColor="#8BC34A"
+                app:hintTextColor="#8BC34A"
+                android:textColorHint="#A9A9A9"
+                app:boxStrokeWidth="1dp"
+                app:counterEnabled="true"
+                app:counterMaxLength="16"
+                app:passwordToggleEnabled="true">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etConfirmPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Confirmar Contraseña"
+                    android:inputType="textPassword"
+                    android:maxLength="16" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardCornerRadius="16dp">
+                app:cardCornerRadius="16dp"
+                android:layout_marginTop="10dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:paddingVertical="8dp">
 
                     <TextView
                         android:layout_width="match_parent"
@@ -227,11 +269,11 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:paddingHorizontal="10dp"
-                        android:weightSum="5">
+                        android:weightSum="3">
 
                         <RadioButton
                             android:id="@+id/idPronombreEl"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="Él"
@@ -239,7 +281,7 @@
 
                         <RadioButton
                             android:id="@+id/idPronombreElla"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="Ella"
@@ -247,7 +289,7 @@
 
                         <RadioButton
                             android:id="@+id/idPronombreOtro"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="Otro"
@@ -264,7 +306,7 @@
                 android:layout_marginTop="16dp"
                 android:text="Acepto los Términos y Condiciones"
                 android:textColor="#616161"
-                android:checked="true"
+                android:checked="false"
                 app:buttonTint="#6DE1F8"
                 app:useMaterialThemeColors="false"/>
 
@@ -275,6 +317,7 @@
                 android:paddingBottom="50dp">
 
                 <Button
+                    android:id="@+id/btnRegister"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:backgroundTint="#8BC34A"

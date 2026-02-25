@@ -7,17 +7,28 @@
     android:layout_height="match_parent"
     android:background="#CCF5FF"
     android:orientation="vertical"
-    tools:context=".PetActivity">
+    tools:context=".ReminderActivity">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:padding="25dp"
         android:layout_weight="1">
 
+        <TextView
+            android:id="@+id/tvContent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textSize="40sp"
+            android:textColor="#8BC34A"
+            android:text="Notificaciones"
+            android:fontFamily="@font/milkshake"
+            android:textAlignment="center"
+            android:padding="20dp"
+            android:textStyle="bold" />
 
     </ScrollView>
 
-    <!--Bottom Navigation Bar (se mantiene abajo)-->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"

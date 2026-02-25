@@ -1,5 +1,6 @@
 package com.example.mypet
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -22,35 +23,24 @@ class HomeActivity : AppCompatActivity() {
 
     private fun setupBottomNavigation() {
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation)
-        val tvContent = findViewById<android.widget.TextView>(R.id.tvContent)
 
-        //Se marca "Inicio" por defecto
         bottomNavigationView.selectedItemId = R.id.navigation_home
 
-        //Configurar el listener para los clicks
         bottomNavigationView.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.navigation_memo -> {
-                    //Aquí se debe añadir el listener para viajar a la pantalla de Recordatorios
-                    //Se añade texto genérico para prueba
-                    tvContent.text = "Recordatorios"
+                    startActivity(Intent(this, ReminderActivity::class.java))
                     true
                 }
                 R.id.navigation_home -> {
-                    //Aquí se debe añadir el listener para viajar a la pantalla de Inicio
-                    //Se añade texto genérico para prueba
-                    tvContent.text = "Inicio"
                     true
                 }
                 R.id.navigation_profile -> {
-                    //Aquí se debe añadir el listener para viajar a la pantalla de Perfil
-                    //Se añade texto genérico para prueba
-                    tvContent.text = "Perfil"
+                    startActivity(Intent(this, UserActivity::class.java))
                     true
                 }
                 else -> false
             }
         }
-
     }
 }
