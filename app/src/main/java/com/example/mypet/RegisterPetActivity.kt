@@ -1,6 +1,7 @@
 package com.example.mypet
 
 import android.os.Bundle
+import android.widget.Button
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -16,5 +17,12 @@ class RegisterPetActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+        val btnRegisterPet = findViewById<Button>(R.id.btnRegisterPet)
+        val btnCancelar = findViewById<Button>(R.id.btnCancelar)
+
+        btnCancelar.setOnClickListener {
+            finish()
+        }
+
     }
 }

@@ -126,6 +126,29 @@
                             android:layout_width="100dp"
                             android:layout_height="wrap_content"/>
                     </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingTop="5dp"
+                        android:gravity="center">
+
+                        <Button
+                            android:id="@+id/btnRegisterPet"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Registrar"
+                            android:layout_marginRight="5dp"
+                            android:backgroundTint="#8BC34A"/>
+
+                        <Button
+                            android:id="@+id/btnCancelar"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Cancelar"
+                            android:layout_marginLeft="5dp"
+                            android:backgroundTint="#A9A9A9"/>
+                    </LinearLayout>
 
                 </LinearLayout>
 

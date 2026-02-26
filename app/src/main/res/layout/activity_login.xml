@@ -95,9 +95,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Registrarse"
             android:backgroundTint="#A9A9A9"
-            android:padding="15dp"/>
+            android:padding="15dp"
+            android:text="Registrarse" />
 
     </LinearLayout>
 

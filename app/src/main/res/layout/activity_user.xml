@@ -21,7 +21,7 @@
             android:layout_height="match_parent"
             android:textSize="40sp"
             android:textColor="#8BC34A"
-            android:text="Perfil usuario"
+            android:text="Usuario"
             android:fontFamily="@font/milkshake"
             android:textAlignment="center"
             android:padding="20dp"
