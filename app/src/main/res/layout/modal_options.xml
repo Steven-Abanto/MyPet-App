@@ -21,7 +21,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="15dp"
-        android:text="Marcar como comprado"
+        android:text="Marcar como realizado"
         android:backgroundTint="#47D341"
         app:icon="@drawable/ic_dog"/>
 

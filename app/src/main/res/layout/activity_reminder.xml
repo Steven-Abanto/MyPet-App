@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
@@ -7,27 +7,51 @@
     android:layout_height="match_parent"
     android:background="#CCF5FF"
     android:orientation="vertical"
+    android:paddingTop="16dp"
     tools:context=".ReminderActivity">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:padding="25dp"
-        android:layout_weight="1">
+        app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/tvContent"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:textSize="40sp"
-            android:textColor="#8BC34A"
-            android:text="Notificaciones"
-            android:fontFamily="@font/milkshake"
-            android:textAlignment="center"
-            android:padding="20dp"
-            android:textStyle="bold" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/tvContent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="40sp"
+                android:textColor="#8BC34A"
+                android:text="Recordatorios"
+                android:fontFamily="@font/milkshake"
+                android:textAlignment="center"
+                android:padding="15dp"
+                android:textStyle="bold" />
 
+            <ListView
+                android:id="@+id/lvReminders"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+            </ListView>
+
+        </LinearLayout>
     </ScrollView>
+
+    <ImageView
+        android:id="@+id/ivAddReminder"
+        android:layout_width="110dp"
+        android:layout_height="110dp"
+        android:padding="30dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_add_pet"
+        app:tint="#6DE1F8"
+        app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
@@ -37,5 +61,6 @@
         app:itemIconTint="@color/bottom_nav_color_state"
         app:itemTextColor="@color/bottom_nav_color_state"
         app:labelVisibilityMode="labeled"
-        app:menu="@menu/bottom_navbar" />
-</LinearLayout>
+        app:menu="@menu/bottom_navbar"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+</androidx.constraintlayout.widget.ConstraintLayout>
