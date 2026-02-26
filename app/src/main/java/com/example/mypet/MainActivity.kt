@@ -10,7 +10,7 @@ import androidx.core.view.WindowInsetsCompat
 
 class MainActivity : AppCompatActivity() {
     private lateinit var btnLogin : Button
-    private lateinit var btnRegister : Button
+//    private lateinit var btnRegister : Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,11 +23,11 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        btnRegister = findViewById(R.id.btnRegister)
-        btnRegister.setOnClickListener{
-            val intent = Intent(this, RegisterActivity::class.java)
-            startActivity(intent)
-        }
+//        btnRegister = findViewById(R.id.btnRegister)
+//        btnRegister.setOnClickListener{
+//            val intent = Intent(this, RegisterActivity::class.java)
+//            startActivity(intent)
+//        }
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())

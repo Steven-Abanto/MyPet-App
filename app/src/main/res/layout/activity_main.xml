@@ -33,16 +33,17 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:layout_marginHorizontal="32dp"
-        android:text="Iniciar sesión"
+        android:text="Ingresar"
+        android:textStyle="bold"
         android:backgroundTint="#8BC34A"/>
 
-    <Button
-        android:id="@+id/btnRegister"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginHorizontal="32dp"
-        android:text="Registrarse"
-        android:backgroundTint="#6DE1F8"/>
+<!--    <Button-->
+<!--        android:id="@+id/btnRegister"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="16dp"-->
+<!--        android:layout_marginHorizontal="32dp"-->
+<!--        android:text="Registrarse"-->
+<!--        android:backgroundTint="#6DE1F8"/>-->
 
 </LinearLayout>

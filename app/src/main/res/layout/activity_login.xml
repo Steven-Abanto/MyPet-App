@@ -95,7 +95,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:backgroundTint="#A9A9A9"
+            android:backgroundTint="#6DE1F8"
             android:padding="15dp"
             android:text="Registrarse" />
 
@@ -107,8 +107,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="¿Olvidaste tu contraseña?"
+        android:textStyle="bold"
         android:clickable="true"
         android:focusable="true"
-        android:textColor="#6DE1F8"/>
+        android:textColor="#09B3D0"/>
 
 </LinearLayout>
