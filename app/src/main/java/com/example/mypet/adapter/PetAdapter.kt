@@ -7,7 +7,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mypet.R
-import com.example.mypet.entity.Compra
 import com.example.mypet.entity.Pet
 
 class PetAdapter (private val petList: List<Pet>) : RecyclerView.Adapter<PetAdapter.PetViewHolder>() {
@@ -23,7 +22,7 @@ class PetAdapter (private val petList: List<Pet>) : RecyclerView.Adapter<PetAdap
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PetViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_historial,parent,false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_pet,parent,false)
         return PetViewHolder(view)
     }
 
