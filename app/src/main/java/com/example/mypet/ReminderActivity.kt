@@ -99,7 +99,7 @@ class ReminderActivity : AppCompatActivity() {
     private fun setupBottomNavigation() {
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation)
 
-        bottomNavigationView.selectedItemId = R.id.navigation_home
+        bottomNavigationView.selectedItemId = R.id.navigation_memo
 
         bottomNavigationView.setOnItemSelectedListener { item ->
             when (item.itemId) {
