@@ -111,7 +111,7 @@ class ReminderActivity : AppCompatActivity() {
                     true
                 }
                 R.id.navigation_profile -> {
-                    startActivity(Intent(this, UserActivity::class.java))
+                    startActivity(Intent(this, ProfileActivity::class.java))
                     true
                 }
                 else -> false

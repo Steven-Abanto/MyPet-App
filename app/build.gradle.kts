@@ -39,7 +39,6 @@ dependencies {
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
-    implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
     testImplementation(libs.junit)
@@ -47,6 +46,10 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
 
     //Navegación para navbar inferior
-    implementation("androidx.navigation:navigation-fragment-ktx:2.7.6")
-    implementation("androidx.navigation:navigation-ui-ktx:2.7.6")
+    implementation(libs.androidx.navigation.fragment.ktx)
+    implementation(libs.androidx.navigation.ui.ktx)
+
+    //Material Design
+    implementation(libs.material)
+    implementation(libs.material.v1110)
 }
