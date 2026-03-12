@@ -7,9 +7,9 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mypet.R
-import com.example.mypet.entity.Pet
+import com.example.mypet.entity.Mascota
 
-class PetAdapter (private val petList: List<Pet>) : RecyclerView.Adapter<PetAdapter.PetViewHolder>() {
+class PetAdapter (private val mascotaList: List<Mascota>) : RecyclerView.Adapter<PetAdapter.PetViewHolder>() {
 
     inner class PetViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         val petImage: ImageView = itemView.findViewById(R.id.petImage)
@@ -27,20 +27,20 @@ class PetAdapter (private val petList: List<Pet>) : RecyclerView.Adapter<PetAdap
     }
 
     override fun getItemCount(): Int {
-        return petList.size
+        return mascotaList.size
     }
 
     override fun onBindViewHolder(holder: PetViewHolder, position: Int) {
-        val pet = petList[position]
-        holder.petName.text = pet.name
-        holder.petAge.text = pet.birthDate
-        holder.petSpecies.text = pet.species
-        holder.petBreed.text = pet.breed
-        holder.petWeight.text = pet.weight
+        val pet = mascotaList[position]
+        holder.petName.text = pet.nombres
+        holder.petAge.text = pet.fechaNacimiento
+        holder.petSpecies.text = pet.idEspecie.toString()
+        holder.petBreed.text = pet.idRaza.toString()
+        holder.petWeight.text = pet.pesoActual
 
-        when (pet.species) {
-            "Perro" -> holder.petImage.setImageResource(R.drawable.ic_dog)
-            "Gato" -> holder.petImage.setImageResource(R.drawable.ic_cat)
+        when (pet.idEspecie) {
+            1 -> holder.petImage.setImageResource(R.drawable.ic_dog)
+            2 -> holder.petImage.setImageResource(R.drawable.ic_cat)
             else -> holder.petImage.setImageResource(R.drawable.ic_logo_mypet)
 
         }

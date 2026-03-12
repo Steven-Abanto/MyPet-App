@@ -23,8 +23,8 @@
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="80dp"
-                app:tint="#6DE1F8"
-                android:src="@drawable/ic_add_person"/>
+                android:src="@drawable/ic_add_person"
+                app:tint="#6DE1F8" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -41,17 +41,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingVertical="1dp"
+                android:textColorHint="#A9A9A9"
                 app:boxBackgroundColor="@color/white"
                 app:boxCornerRadiusBottomEnd="18dp"
                 app:boxCornerRadiusBottomStart="18dp"
                 app:boxCornerRadiusTopEnd="18dp"
                 app:boxCornerRadiusTopStart="18dp"
+                app:boxStrokeColor="#8BC34A"
                 app:boxStrokeWidth="1dp"
                 app:counterEnabled="true"
-                app:boxStrokeColor="#8BC34A"
-                app:hintTextColor="#8BC34A"
-                android:textColorHint="#A9A9A9"
-                app:counterMaxLength="30">
+                app:counterMaxLength="30"
+                app:hintTextColor="#8BC34A">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etName"
@@ -77,17 +77,17 @@
                     android:layout_weight="1"
                     android:paddingVertical="1dp"
                     android:paddingEnd="5dp"
+                    android:textColorHint="#A9A9A9"
                     app:boxBackgroundColor="@color/white"
                     app:boxCornerRadiusBottomEnd="18dp"
                     app:boxCornerRadiusBottomStart="18dp"
                     app:boxCornerRadiusTopEnd="18dp"
                     app:boxCornerRadiusTopStart="18dp"
                     app:boxStrokeColor="#8BC34A"
-                    app:hintTextColor="#8BC34A"
-                    android:textColorHint="#A9A9A9"
                     app:boxStrokeWidth="1dp"
                     app:counterEnabled="true"
-                    app:counterMaxLength="30">
+                    app:counterMaxLength="30"
+                    app:hintTextColor="#8BC34A">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etLastNameP"
@@ -107,17 +107,17 @@
                     android:layout_weight="1"
                     android:paddingVertical="1dp"
                     android:paddingStart="5dp"
+                    android:textColorHint="#A9A9A9"
                     app:boxBackgroundColor="@color/white"
                     app:boxCornerRadiusBottomEnd="18dp"
                     app:boxCornerRadiusBottomStart="18dp"
                     app:boxCornerRadiusTopEnd="18dp"
                     app:boxCornerRadiusTopStart="18dp"
                     app:boxStrokeColor="#8BC34A"
-                    app:hintTextColor="#8BC34A"
-                    android:textColorHint="#A9A9A9"
                     app:boxStrokeWidth="1dp"
                     app:counterEnabled="true"
-                    app:counterMaxLength="30">
+                    app:counterMaxLength="30"
+                    app:hintTextColor="#8BC34A">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etLastNameM"
@@ -133,122 +133,34 @@
             </LinearLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tilPhone"
+                android:id="@+id/tilProfileBirthdate"
+                android:layout_marginVertical="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingVertical="1dp"
+                android:textColorHint="#A9A9A9"
                 app:boxBackgroundColor="@color/white"
                 app:boxCornerRadiusBottomEnd="18dp"
                 app:boxCornerRadiusBottomStart="18dp"
                 app:boxCornerRadiusTopEnd="18dp"
                 app:boxCornerRadiusTopStart="18dp"
                 app:boxStrokeColor="#8BC34A"
-                app:hintTextColor="#8BC34A"
-                android:textColorHint="#A9A9A9"
                 app:boxStrokeWidth="1dp"
-                app:counterEnabled="true"
-                app:counterMaxLength="9">
+                android:hint="Fecha de nacimiento">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etPhone"
+                    android:id="@+id/etFecha"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Celular (Opcional)"
-                    android:inputType="number"
-                    android:maxLength="9" />
-
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tilEmail"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingVertical="1dp"
-                app:boxBackgroundColor="@color/white"
-                app:boxCornerRadiusBottomEnd="18dp"
-                app:boxCornerRadiusBottomStart="18dp"
-                app:boxCornerRadiusTopEnd="18dp"
-                app:boxCornerRadiusTopStart="18dp"
-                app:boxStrokeColor="#8BC34A"
-                app:hintTextColor="#8BC34A"
-                android:textColorHint="#A9A9A9"
-                app:boxStrokeWidth="1dp"
-                app:counterEnabled="true"
-                app:counterMaxLength="60">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etEmail"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Correo Electrónico"
-                    android:inputType="textEmailAddress"
-                    android:maxLength="60" />
-
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tilPassword"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingVertical="1dp"
-                app:boxBackgroundColor="@color/white"
-                app:boxCornerRadiusBottomEnd="18dp"
-                app:boxCornerRadiusBottomStart="18dp"
-                app:boxCornerRadiusTopEnd="18dp"
-                app:boxCornerRadiusTopStart="18dp"
-                app:boxStrokeColor="#8BC34A"
-                app:hintTextColor="#8BC34A"
-                android:textColorHint="#A9A9A9"
-                app:boxStrokeWidth="1dp"
-                app:counterEnabled="true"
-                app:counterMaxLength="16"
-                app:passwordToggleEnabled="true">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etPassword"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Contraseña"
-                    android:inputType="textPassword"
-                    android:maxLength="16" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tilConfirmPassword"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingVertical="1dp"
-                app:boxBackgroundColor="@color/white"
-                app:boxCornerRadiusBottomEnd="18dp"
-                app:boxCornerRadiusBottomStart="18dp"
-                app:boxCornerRadiusTopEnd="18dp"
-                app:boxCornerRadiusTopStart="18dp"
-                app:boxStrokeColor="#8BC34A"
-                app:hintTextColor="#8BC34A"
-                android:textColorHint="#A9A9A9"
-                app:boxStrokeWidth="1dp"
-                app:counterEnabled="true"
-                app:counterMaxLength="16"
-                app:passwordToggleEnabled="true">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etConfirmPassword"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Confirmar Contraseña"
-                    android:inputType="textPassword"
-                    android:maxLength="16" />
-
+                    android:focusable="false"
+                    android:clickable="true">
+                </com.google.android.material.textfield.TextInputEditText>
             </com.google.android.material.textfield.TextInputLayout>
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardCornerRadius="16dp"
-                android:layout_marginTop="10dp">
+                android:layout_marginTop="10dp"
+                app:cardCornerRadius="16dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -298,17 +210,128 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilPhone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:paddingVertical="1dp"
+                android:textColorHint="#A9A9A9"
+                app:boxBackgroundColor="@color/white"
+                app:boxCornerRadiusBottomEnd="18dp"
+                app:boxCornerRadiusBottomStart="18dp"
+                app:boxCornerRadiusTopEnd="18dp"
+                app:boxCornerRadiusTopStart="18dp"
+                app:boxStrokeColor="#8BC34A"
+                app:boxStrokeWidth="1dp"
+                app:counterEnabled="true"
+                app:counterMaxLength="9"
+                app:hintTextColor="#8BC34A">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etPhone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Celular (Opcional)"
+                    android:inputType="number"
+                    android:maxLength="9" />
+
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingVertical="1dp"
+                android:textColorHint="#A9A9A9"
+                app:boxBackgroundColor="@color/white"
+                app:boxCornerRadiusBottomEnd="18dp"
+                app:boxCornerRadiusBottomStart="18dp"
+                app:boxCornerRadiusTopEnd="18dp"
+                app:boxCornerRadiusTopStart="18dp"
+                app:boxStrokeColor="#8BC34A"
+                app:boxStrokeWidth="1dp"
+                app:counterEnabled="true"
+                app:counterMaxLength="60"
+                app:hintTextColor="#8BC34A">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Correo Electrónico"
+                    android:inputType="textEmailAddress"
+                    android:maxLength="60" />
+
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingVertical="1dp"
+                android:textColorHint="#A9A9A9"
+                app:boxBackgroundColor="@color/white"
+                app:boxCornerRadiusBottomEnd="18dp"
+                app:boxCornerRadiusBottomStart="18dp"
+                app:boxCornerRadiusTopEnd="18dp"
+                app:boxCornerRadiusTopStart="18dp"
+                app:boxStrokeColor="#8BC34A"
+                app:boxStrokeWidth="1dp"
+                app:counterEnabled="true"
+                app:counterMaxLength="16"
+                app:hintTextColor="#8BC34A"
+                app:passwordToggleEnabled="true">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Contraseña"
+                    android:inputType="textPassword"
+                    android:maxLength="16" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilConfirmPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingVertical="1dp"
+                android:textColorHint="#A9A9A9"
+                app:boxBackgroundColor="@color/white"
+                app:boxCornerRadiusBottomEnd="18dp"
+                app:boxCornerRadiusBottomStart="18dp"
+                app:boxCornerRadiusTopEnd="18dp"
+                app:boxCornerRadiusTopStart="18dp"
+                app:boxStrokeColor="#8BC34A"
+                app:boxStrokeWidth="1dp"
+                app:counterEnabled="true"
+                app:counterMaxLength="16"
+                app:hintTextColor="#8BC34A"
+                app:passwordToggleEnabled="true">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etConfirmPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Confirmar Contraseña"
+                    android:inputType="textPassword"
+                    android:maxLength="16" />
+
+            </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.checkbox.MaterialCheckBox
                 android:id="@+id/termsCheckBox"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:checked="false"
                 android:text="Acepto los Términos y Condiciones"
                 android:textColor="#616161"
-                android:checked="false"
                 app:buttonTint="#6DE1F8"
-                app:useMaterialThemeColors="false"/>
+                app:useMaterialThemeColors="false" />
 
             <LinearLayout
                 android:layout_width="match_parent"

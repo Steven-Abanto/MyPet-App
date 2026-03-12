@@ -10,7 +10,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mypet.adapter.PetAdapter
-import com.example.mypet.entity.Pet
+import com.example.mypet.entity.Mascota
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class HomeActivity : AppCompatActivity() {
@@ -23,16 +23,12 @@ class HomeActivity : AppCompatActivity() {
         setContentView(R.layout.activity_home)
 
         rvPets = findViewById(R.id.rvPets)
-        val pets = listOf(
-            Pet("Pipa","01-01-2020","Perro","Pitbull","10kg"),
-            Pet("Pipe","01-01-2020","Gato","Siames","10kg"),
-            Pet("Pipi","01-01-2020","Conejo","Rex","10kg"),
-            Pet("Pipo","01-01-2020","Gato","Maine Coon", "10kg"),
-            Pet("Pipu","01-01-2020","Conejo","Angora", "10kg"),
-            Pet("Pippa","01-01-2020","Perro", "Bulldog", "10kg"),
+        val mascotas = listOf(
+            Mascota(1,1,"Pipa","01-01-2020",1,1,"F","8.5Kg",true,false,"Le gusta dormir mucho",true),
+            Mascota(2,1,"Pipe","01-01-2020",2,1,"F","8.5Kg",true,false,"Le gusta dormir mucho",true),
         )
 
-        petAdapter = PetAdapter(pets)
+        petAdapter = PetAdapter(mascotas)
 
         rvPets.layoutManager = LinearLayoutManager(this)
         rvPets.adapter = petAdapter

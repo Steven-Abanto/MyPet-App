@@ -6,8 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#CCF5FF"
-    android:orientation="vertical"
-    tools:context=".ProfileFragment">
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/tvContent"
@@ -146,7 +145,7 @@
                     android:id="@+id/tvProfileGender"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:text="Género"
+                    android:text="Pronombre"
                     android:textStyle="bold"
                     />
 
@@ -155,7 +154,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="5dp"
-                    android:text="M/F/O"
+                    android:text="Él/Ella/Otro"
                     android:textSize="22sp"/>
             </LinearLayout>
         </LinearLayout>

@@ -3,8 +3,8 @@
 
  <!-- Seleccionar género -->
     <string-array name="gender_options">
-        <item>Masculino</item>
-        <item>Femenino</item>
+        <item>Él</item>
+        <item>Ella</item>
         <item>Otro</item>
     </string-array>
 
