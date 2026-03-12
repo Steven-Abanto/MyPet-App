@@ -6,157 +6,425 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#CCF5FF"
+    android:background="@color/white"
     tools:context=".RegisterPetActivity"
-    android:padding="25dp">
+    android:padding="16dp">
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingBottom="24dp">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <ImageView
+                android:id="@+id/petRegisterLogo"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="80dp"
+                android:src="@drawable/ic_dog"
+                app:tint="#6DE1F8"
+                android:layout_marginTop="16dp"/>
 
-                <ImageView
-                    android:id="@+id/petRegisterLogo"
-                    android:layout_width="120dp"
-                    android:layout_height="0dp"
-                    android:src="@drawable/ic_dog"
-                    app:layout_constraintDimensionRatio="1:1"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"/>
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.cardview.widget.CardView
-                xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                app:cardCornerRadius="16dp"
+                android:layout_marginVertical="10dp"
+                android:text="Registro de Mascota"
+                android:textAlignment="center"
+                android:textColor="#8BC34A"
+                android:textSize="28sp"
+                android:textStyle="bold" />
+
+            <!-- Información General -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                app:cardCornerRadius="18dp"
                 app:cardElevation="4dp"
-                app:contentPadding="20dp">
+                app:contentPadding="16dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Información General"
+                        android:textStyle="bold"
+                        android:textSize="18sp"
+                        android:layout_marginBottom="12dp"
+                        android:textColor="#8BC34A"/>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingVertical="2dp"
+                        app:boxBackgroundColor="@color/white"
+                        app:boxCornerRadiusBottomEnd="18dp"
+                        app:boxCornerRadiusBottomStart="18dp"
+                        app:boxCornerRadiusTopEnd="18dp"
+                        app:boxCornerRadiusTopStart="18dp"
+                        app:boxStrokeWidth="1dp"
+                        app:boxStrokeColor="#8BC34A"
+                        app:hintTextColor="#8BC34A"
+                        android:textColorHint="#A9A9A9">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/petNameEditText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Nombre"
+                            android:inputType="textCapWords"/>
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingVertical="2dp"
+                        app:boxBackgroundColor="@color/white"
+                        app:boxCornerRadiusBottomEnd="18dp"
+                        app:boxCornerRadiusBottomStart="18dp"
+                        app:boxCornerRadiusTopEnd="18dp"
+                        app:boxCornerRadiusTopStart="18dp"
+                        app:boxStrokeWidth="1dp"
+                        app:boxStrokeColor="#8BC34A"
+                        app:hintTextColor="#8BC34A"
+                        android:textColorHint="#A9A9A9">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/petBirthEditText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Fecha de nacimiento"
+                            android:focusable="false"
+                            android:clickable="true"/>
+                    </com.google.android.material.textfield.TextInputLayout>
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:gravity="center_vertical">
+                        android:gravity="center_vertical"
+                        android:layout_marginVertical="8dp"
+                        android:paddingHorizontal="4dp">
 
                         <TextView
-                            android:layout_width="0dp"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Nombre"
-                            android:textStyle="bold"
-                            android:textSize="16sp"/>
-
-                        <com.google.android.material.textfield.TextInputLayout
-                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="2">
-
-                            <com.google.android.material.textfield.TextInputEditText
-                                android:id="@+id/petNameEditText"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"/>
-
-                        </com.google.android.material.textfield.TextInputLayout>
-                    </LinearLayout>
-
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical">
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Fecha de nacimiento"
-                            android:textStyle="bold"
-                            android:textSize="16sp"/>
-
-                        <com.google.android.material.textfield.TextInputLayout
-                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="2">
-
-                            <com.google.android.material.textfield.TextInputEditText
-                                android:id="@+id/petBirthEditText"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"/>
-
-                        </com.google.android.material.textfield.TextInputLayout>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical">
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Raza"
-                            android:textStyle="bold"
-                            android:textSize="16sp"/>
+                            android:text="Raza:"
+                            android:textColor="#616161"
+                            android:textSize="16sp"
+                            android:layout_marginEnd="16dp"/>
 
                         <Spinner
-                            android:layout_width="100dp"
-                            android:layout_height="wrap_content"/>
+                            android:id="@+id/petBreedSpinner"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:minHeight="48dp"/>
                     </LinearLayout>
-                    <LinearLayout
+
+                    <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:paddingTop="10dp"
-                        android:gravity="center">
+                        android:paddingVertical="2dp"
+                        app:boxBackgroundColor="@color/white"
+                        app:boxCornerRadiusBottomEnd="18dp"
+                        app:boxCornerRadiusBottomStart="18dp"
+                        app:boxCornerRadiusTopEnd="18dp"
+                        app:boxCornerRadiusTopStart="18dp"
+                        app:boxStrokeWidth="1dp"
+                        app:boxStrokeColor="#8BC34A"
+                        app:hintTextColor="#8BC34A"
+                        android:textColorHint="#A9A9A9">
 
-                        <Button
-                            android:id="@+id/btnRegisterPet"
-                            android:layout_width="wrap_content"
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/petWeightEditText"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Registrar"
-                            android:layout_marginRight="5dp"
-                            android:backgroundTint="#8BC34A"/>
+                            android:hint="Peso (kg)"
+                            android:inputType="numberDecimal"/>
+                    </com.google.android.material.textfield.TextInputLayout>
 
-                        <Button
-                            android:id="@+id/btnCancelar"
-                            android:layout_width="wrap_content"
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingVertical="2dp"
+                        app:boxBackgroundColor="@color/white"
+                        app:boxCornerRadiusBottomEnd="18dp"
+                        app:boxCornerRadiusBottomStart="18dp"
+                        app:boxCornerRadiusTopEnd="18dp"
+                        app:boxCornerRadiusTopStart="18dp"
+                        app:boxStrokeWidth="1dp"
+                        app:boxStrokeColor="#8BC34A"
+                        app:hintTextColor="#8BC34A"
+                        android:textColorHint="#A9A9A9">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/petMicrochipEditText"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Cancelar"
-                            android:layout_marginLeft="5dp"
-                            android:backgroundTint="#A9A9A9"/>
-                    </LinearLayout>
+                            android:hint="Microchip"
+                            android:inputType="text"/>
+                    </com.google.android.material.textfield.TextInputLayout>
 
                 </LinearLayout>
-
-
             </androidx.cardview.widget.CardView>
 
+            <!-- Información Médica -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                app:cardCornerRadius="18dp"
+                app:cardElevation="4dp"
+                app:contentPadding="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Información Médica"
+                        android:textStyle="bold"
+                        android:textSize="18sp"
+                        android:layout_marginBottom="12dp"
+                        android:textColor="#8BC34A"/>
+
+                    <com.google.android.material.checkbox.MaterialCheckBox
+                        android:id="@+id/petNeuteredCheckBox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="¿Está esterilizado?"
+                        android:textColor="#616161"
+                        app:buttonTint="#6DE1F8"
+                        app:useMaterialThemeColors="false"/>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingVertical="2dp"
+                        app:boxBackgroundColor="@color/white"
+                        app:boxCornerRadiusBottomEnd="18dp"
+                        app:boxCornerRadiusBottomStart="18dp"
+                        app:boxCornerRadiusTopEnd="18dp"
+                        app:boxCornerRadiusTopStart="18dp"
+                        app:boxStrokeWidth="1dp"
+                        app:boxStrokeColor="#8BC34A"
+                        app:hintTextColor="#8BC34A"
+                        android:textColorHint="#A9A9A9">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/petNeuteredDateEditText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Fecha de esterilización"
+                            android:focusable="false"
+                            android:clickable="true"/>
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingVertical="2dp"
+                        app:boxBackgroundColor="@color/white"
+                        app:boxCornerRadiusBottomEnd="18dp"
+                        app:boxCornerRadiusBottomStart="18dp"
+                        app:boxCornerRadiusTopEnd="18dp"
+                        app:boxCornerRadiusTopStart="18dp"
+                        app:boxStrokeWidth="1dp"
+                        app:boxStrokeColor="#8BC34A"
+                        app:hintTextColor="#8BC34A"
+                        android:textColorHint="#A9A9A9">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/petVaccinesEditText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Vacunas"
+                            android:inputType="textMultiLine"
+                            android:minLines="2"/>
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingVertical="2dp"
+                        app:boxBackgroundColor="@color/white"
+                        app:boxCornerRadiusBottomEnd="18dp"
+                        app:boxCornerRadiusBottomStart="18dp"
+                        app:boxCornerRadiusTopEnd="18dp"
+                        app:boxCornerRadiusTopStart="18dp"
+                        app:boxStrokeWidth="1dp"
+                        app:boxStrokeColor="#8BC34A"
+                        app:hintTextColor="#8BC34A"
+                        android:textColorHint="#A9A9A9">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/petAllergiesEditText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Alergias"
+                            android:inputType="textMultiLine"
+                            android:minLines="2"/>
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingVertical="2dp"
+                        app:boxBackgroundColor="@color/white"
+                        app:boxCornerRadiusBottomEnd="18dp"
+                        app:boxCornerRadiusBottomStart="18dp"
+                        app:boxCornerRadiusTopEnd="18dp"
+                        app:boxCornerRadiusTopStart="18dp"
+                        app:boxStrokeWidth="1dp"
+                        app:boxStrokeColor="#8BC34A"
+                        app:hintTextColor="#8BC34A"
+                        android:textColorHint="#A9A9A9">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/petDiseasesEditText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Enfermedades"
+                            android:inputType="textMultiLine"
+                            android:minLines="2"/>
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingVertical="2dp"
+                        app:boxBackgroundColor="@color/white"
+                        app:boxCornerRadiusBottomEnd="18dp"
+                        app:boxCornerRadiusBottomStart="18dp"
+                        app:boxCornerRadiusTopEnd="18dp"
+                        app:boxCornerRadiusTopStart="18dp"
+                        app:boxStrokeWidth="1dp"
+                        app:boxStrokeColor="#8BC34A"
+                        app:hintTextColor="#8BC34A"
+                        android:textColorHint="#A9A9A9">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/petBathsEditText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Baños (Frecuencia/Último)"
+                            android:inputType="text"/>
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Favoritos -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                app:cardCornerRadius="18dp"
+                app:cardElevation="4dp"
+                app:contentPadding="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Favoritos"
+                        android:textStyle="bold"
+                        android:textSize="18sp"
+                        android:layout_marginBottom="12dp"
+                        android:textColor="#8BC34A"/>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingVertical="2dp"
+                        app:boxBackgroundColor="@color/white"
+                        app:boxCornerRadiusBottomEnd="18dp"
+                        app:boxCornerRadiusBottomStart="18dp"
+                        app:boxCornerRadiusTopEnd="18dp"
+                        app:boxCornerRadiusTopStart="18dp"
+                        app:boxStrokeWidth="1dp"
+                        app:boxStrokeColor="#8BC34A"
+                        app:hintTextColor="#8BC34A"
+                        android:textColorHint="#A9A9A9">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/petToysEditText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Juguetes favoritos"
+                            android:inputType="textMultiLine"/>
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingVertical="2dp"
+                        app:boxBackgroundColor="@color/white"
+                        app:boxCornerRadiusBottomEnd="18dp"
+                        app:boxCornerRadiusBottomStart="18dp"
+                        app:boxCornerRadiusTopEnd="18dp"
+                        app:boxCornerRadiusTopStart="18dp"
+                        app:boxStrokeWidth="1dp"
+                        app:boxStrokeColor="#8BC34A"
+                        app:hintTextColor="#8BC34A"
+                        android:textColorHint="#A9A9A9">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/petFoodEditText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Comida favorita"
+                            android:inputType="textMultiLine"/>
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Botones -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="16dp"
+                android:gravity="center">
+
+                <Button
+                    android:id="@+id/btnRegisterPet"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Registrar"
+                    android:textStyle="bold"
+                    android:layout_marginEnd="8dp"
+                    android:backgroundTint="#8BC34A"/>
+
+                <Button
+                    android:id="@+id/btnCancelar"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Cancelar"
+                    android:textStyle="bold"
+                    android:layout_marginStart="8dp"
+                    android:backgroundTint="#A9A9A9"/>
+            </LinearLayout>
+
         </LinearLayout>
-
     </ScrollView>
-
 </FrameLayout>
