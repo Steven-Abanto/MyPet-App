@@ -116,7 +116,7 @@ class RegisterActivity : AppCompatActivity() {
                 Toast.makeText(this, "Error al registrar", Toast.LENGTH_SHORT).show()
             }
 
-            val intent = Intent(this, HomeActivity::class.java)
+            val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
             finish()
         }
