@@ -6,13 +6,14 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.airbnb.lottie.LottieAnimationView
 import com.example.mypet.R
 import com.example.mypet.entity.Mascota
 
 class PetAdapter (private val mascotaList: List<Mascota>) : RecyclerView.Adapter<PetAdapter.PetViewHolder>() {
 
     inner class PetViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
-        val petImage: ImageView = itemView.findViewById(R.id.petImage)
+        val petImage: LottieAnimationView = itemView.findViewById(R.id.lavPetImage)
         val petName: TextView = itemView.findViewById(R.id.tvName)
         val petAge: TextView = itemView.findViewById(R.id.tvAge)
         val petSpecies: TextView = itemView.findViewById(R.id.tvSpecies)
@@ -39,10 +40,8 @@ class PetAdapter (private val mascotaList: List<Mascota>) : RecyclerView.Adapter
         holder.petWeight.text = pet.pesoActual
 
         when (pet.idEspecie) {
-            1 -> holder.petImage.setImageResource(R.drawable.ic_dog)
-            2 -> holder.petImage.setImageResource(R.drawable.ic_cat)
-            else -> holder.petImage.setImageResource(R.drawable.ic_logo_mypet)
-
+            1 -> holder.petImage.setAnimation(R.raw.dogwalking)
+            2 -> holder.petImage.setAnimation(R.raw.loadercat)
         }
     }
 }

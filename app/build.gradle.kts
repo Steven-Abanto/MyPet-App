@@ -52,4 +52,7 @@ dependencies {
     //Material Design
     implementation(libs.material)
     implementation(libs.material.v1110)
+
+    implementation(libs.glide)
+    implementation(libs.lottie)
 }
