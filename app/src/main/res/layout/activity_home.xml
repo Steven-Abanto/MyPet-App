@@ -45,7 +45,7 @@
         android:padding="30dp"
         android:scaleType="fitCenter"
         android:src="@drawable/ic_add_pet"
-        app:tint="#6DE1F8"
+        app:tint="#00CEC8"
         app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginEnd="16dp"

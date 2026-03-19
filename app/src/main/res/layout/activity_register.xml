@@ -24,7 +24,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="80dp"
                 android:src="@drawable/ic_add_person"
-                app:tint="#6DE1F8" />
+                app:tint="#00CEC8" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -330,7 +330,7 @@
                 android:checked="false"
                 android:text="Acepto los Términos y Condiciones"
                 android:textColor="#616161"
-                app:buttonTint="#6DE1F8"
+                app:buttonTint="#00CEC8"
                 app:useMaterialThemeColors="false" />
 
             <LinearLayout
