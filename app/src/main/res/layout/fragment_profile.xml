@@ -27,7 +27,7 @@
         android:id="@+id/clProfileInfo"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:padding="25dp"
+        android:padding="30dp"
         android:orientation="vertical"
         app:layout_constraintTop_toBottomOf="@id/tvContent">
 
@@ -38,7 +38,8 @@
             android:padding="10dp"
             android:src="@drawable/ic_person"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="#00CEC8" />
 
         <LinearLayout
             android:id="@+id/llProfileName"
@@ -64,7 +65,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
                 android:text="Nombre del Usuario"
-                android:textSize="22sp"/>
+                android:textSize="20sp"/>
         </LinearLayout>
 
 
@@ -99,7 +100,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tvProfileLastname"
                 android:text="Apellidos del Usuari"
-                android:textSize="22sp"/>
+                android:textSize="20sp"/>
         </LinearLayout>
 
 
@@ -133,7 +134,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="5dp"
                     android:text="01/01/1999"
-                    android:textSize="22sp"/>
+                    android:textSize="20sp"/>
             </LinearLayout>
 
             <LinearLayout
@@ -155,7 +156,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="5dp"
                     android:text="Él/Ella/Otro"
-                    android:textSize="22sp"/>
+                    android:textSize="20sp"/>
             </LinearLayout>
         </LinearLayout>
 
@@ -182,7 +183,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
                 android:text="correo.contacto@mail.com"
-                android:textSize="22sp"/>
+                android:textSize="20sp"/>
         </LinearLayout>
 
         <LinearLayout
@@ -208,7 +209,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
                 android:text="Teléfono de contacto"
-                android:textSize="22sp"/>
+                android:textSize="20sp"/>
         </LinearLayout>
 
         <com.google.android.material.button.MaterialButton
@@ -218,7 +219,7 @@
             android:text="Editar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:backgroundTint="#6A6B6D"
+            android:backgroundTint="#8BC34A"
             app:layout_constraintTop_toBottomOf="@id/llProfilePhone">
 
         </com.google.android.material.button.MaterialButton>
