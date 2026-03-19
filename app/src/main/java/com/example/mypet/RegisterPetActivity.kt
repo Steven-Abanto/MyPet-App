@@ -1,11 +1,14 @@
 package com.example.mypet
 
+import android.app.DatePickerDialog
 import android.os.Bundle
 import android.widget.Button
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.google.android.material.textfield.TextInputEditText
+import java.util.Calendar
 
 class RegisterPetActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,6 +22,46 @@ class RegisterPetActivity : AppCompatActivity() {
         }
         val btnRegisterPet = findViewById<Button>(R.id.btnRegisterPet)
         val btnCancelar = findViewById<Button>(R.id.btnCancelar)
+        val etFecha = findViewById<TextInputEditText>(R.id.etFecha)
+        val petNeuteredDateEditText = findViewById<TextInputEditText>(R.id.petNeuteredDateEditText)
+
+        etFecha.setOnClickListener {
+            val calendar = Calendar.getInstance()
+            val year = calendar.get(Calendar.YEAR)
+            val month = calendar.get(Calendar.MONTH)
+            val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+            val datePicker = DatePickerDialog(
+                this,
+                { _, selectedYear, selectedMonth, selectedDay ->
+                    val date = "$selectedDay/${selectedMonth + 1}/$selectedYear"
+                    etFecha.setText(date)
+                },
+                year,
+                month,
+                day
+            )
+            datePicker.show()
+        }
+
+        petNeuteredDateEditText.setOnClickListener {
+            val calendar = Calendar.getInstance()
+            val year = calendar.get(Calendar.YEAR)
+            val month = calendar.get(Calendar.MONTH)
+            val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+            val datePicker = DatePickerDialog(
+                this,
+                { _, selectedYear, selectedMonth, selectedDay ->
+                    val date = "$selectedDay/${selectedMonth + 1}/$selectedYear"
+                    petNeuteredDateEditText.setText(date)
+                },
+                year,
+                month,
+                day
+            )
+            datePicker.show()
+        }
 
         btnCancelar.setOnClickListener {
             finish()

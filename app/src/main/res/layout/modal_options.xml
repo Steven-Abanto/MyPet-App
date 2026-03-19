@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="15dp"
         android:text="Marcar como realizado"
-        android:backgroundTint="#47D341"
+        android:backgroundTint="#00CEC8"
         app:icon="@drawable/ic_dog"/>
 
     <com.google.android.material.button.MaterialButton
@@ -31,7 +31,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="15dp"
         android:text="Eliminar"
-        android:backgroundTint="#E23B3B"
+        android:backgroundTint="#79DB70"
         app:icon="@drawable/ic_dog"/>
 
     <com.google.android.material.button.MaterialButton
@@ -40,7 +40,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="15dp"
         android:text="Cancelar"
-        android:backgroundTint="#E0DD4A"
+        android:backgroundTint="#008FD1"
         app:icon="@drawable/ic_cat"/>
 
 </LinearLayout>
