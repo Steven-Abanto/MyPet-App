@@ -78,11 +78,16 @@ class ProfileEditFragment : Fragment(R.layout.fragment_profile_edit) {
         btnSave.setOnClickListener {
 //            parentFragmentManager.popBackStack()
             val dbHelper = AppDatabaseHelper(requireContext())
+
+            val apellidos = etProfileEditLastname.text.toString().trimStart().split(" ")
+            val apeP = apellidos.get(0)
+            val apeM = apellidos.get(1)
+
             val db = dbHelper.writableDatabase
             val valoresUsuario = ContentValues().apply {
                 put("Nombres",  etProfileEditName.text.toString().trim())
-                put("ApellidoPaterno", etProfileEditLastname.text.toString().trimStart())
-                put("ApellidoMaterno", etProfileEditLastname.text.toString().trimEnd())
+                put("ApellidoPaterno", apeP)
+                put("ApellidoMaterno", apeM)
                 put("Pronombre", actvGender.text.toString())
                 put("FechaNacimiento", etFecha.text.toString())
                 put("Email", etProfileEditEmail.text.toString().trim())

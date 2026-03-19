@@ -7,7 +7,6 @@ data class Recordatorio(
     val titulo: String,
     val descripcion: String,
     val idTipoRecordatorio: Int,
-    val costo: Double,
     val fechaInicio: String,
     val fechaFin: String,
     val seRepite: Boolean,

@@ -140,7 +140,6 @@ class AppDatabaseHelper(context : Context) : SQLiteOpenHelper(context, "mypet.db
                 FechaCompletado DATE,
                 Notas TEXT,
                 Estado TEXT,
-                Costo DECIMAL,
 
                 CONSTRAINT fk_historial_recordatorio
                     FOREIGN KEY (IdRecordatorio)
