@@ -31,6 +31,11 @@ class AppDatabaseHelper(context : Context) : SQLiteOpenHelper(context, "mypet.db
             )
         """.trimIndent())
 
+        db.execSQL("INSERT INTO Especie (NombreEspecie) VALUES ('Perro')")
+        db.execSQL("INSERT INTO Especie (NombreEspecie) VALUES ('Gato')")
+        db.execSQL("INSERT INTO Especie (NombreEspecie) VALUES ('Ave')")
+        db.execSQL("INSERT INTO Especie (NombreEspecie) VALUES ('Conejo')")
+
         // Tabla: Raza (depende de la especie)
         db.execSQL("""
             CREATE TABLE IF NOT EXISTS Raza (
@@ -47,6 +52,29 @@ class AppDatabaseHelper(context : Context) : SQLiteOpenHelper(context, "mypet.db
                 UNIQUE (IdEspecie, NombreRaza)
             )
         """.trimIndent())
+
+        db.execSQL("INSERT INTO Raza (IdEspecie, NombreRaza) VALUES ((SELECT IdEspecie FROM Especie WHERE NombreEspecie = 'Perro'), 'Labrador Retriever')")
+        db.execSQL("INSERT INTO Raza (IdEspecie, NombreRaza) VALUES ((SELECT IdEspecie FROM Especie WHERE NombreEspecie = 'Perro'), 'Bulldog')")
+        db.execSQL("INSERT INTO Raza (IdEspecie, NombreRaza) VALUES ((SELECT IdEspecie FROM Especie WHERE NombreEspecie = 'Perro'), 'Pastor Alemán')")
+        db.execSQL("INSERT INTO Raza (IdEspecie, NombreRaza) VALUES ((SELECT IdEspecie FROM Especie WHERE NombreEspecie = 'Perro'), 'Golden Retriever')")
+        db.execSQL("INSERT INTO Raza (IdEspecie, NombreRaza) VALUES ((SELECT IdEspecie FROM Especie WHERE NombreEspecie = 'Perro'), 'Poodle')")
+        db.execSQL("INSERT INTO Raza (IdEspecie, NombreRaza) VALUES ((SELECT IdEspecie FROM Especie WHERE NombreEspecie = 'Perro'), 'Chihuahua')")
+        db.execSQL("INSERT INTO Raza (IdEspecie, NombreRaza) VALUES ((SELECT IdEspecie FROM Especie WHERE NombreEspecie = 'Perro'), 'Rottweiler')")
+
+        db.execSQL("INSERT INTO Raza (IdEspecie, NombreRaza) VALUES ((SELECT IdEspecie FROM Especie WHERE NombreEspecie = 'Gato'), 'Persa')")
+        db.execSQL("INSERT INTO Raza (IdEspecie, NombreRaza) VALUES ((SELECT IdEspecie FROM Especie WHERE NombreEspecie = 'Gato'), 'Siamés')")
+        db.execSQL("INSERT INTO Raza (IdEspecie, NombreRaza) VALUES ((SELECT IdEspecie FROM Especie WHERE NombreEspecie = 'Gato'), 'Maine Coon')")
+        db.execSQL("INSERT INTO Raza (IdEspecie, NombreRaza) VALUES ((SELECT IdEspecie FROM Especie WHERE NombreEspecie = 'Gato'), 'Bengalí')")
+        db.execSQL("INSERT INTO Raza (IdEspecie, NombreRaza) VALUES ((SELECT IdEspecie FROM Especie WHERE NombreEspecie = 'Gato'), 'Esfinge')")
+
+        db.execSQL("INSERT INTO Raza (IdEspecie, NombreRaza) VALUES ((SELECT IdEspecie FROM Especie WHERE NombreEspecie = 'Ave'), 'Periquito')")
+        db.execSQL("INSERT INTO Raza (IdEspecie, NombreRaza) VALUES ((SELECT IdEspecie FROM Especie WHERE NombreEspecie = 'Ave'), 'Canario')")
+        db.execSQL("INSERT INTO Raza (IdEspecie, NombreRaza) VALUES ((SELECT IdEspecie FROM Especie WHERE NombreEspecie = 'Ave'), 'Loro')")
+        db.execSQL("INSERT INTO Raza (IdEspecie, NombreRaza) VALUES ((SELECT IdEspecie FROM Especie WHERE NombreEspecie = 'Ave'), 'Cacatúa')")
+
+        db.execSQL("INSERT INTO Raza (IdEspecie, NombreRaza) VALUES ((SELECT IdEspecie FROM Especie WHERE NombreEspecie = 'Conejo'), 'Cabeza de León')")
+        db.execSQL("INSERT INTO Raza (IdEspecie, NombreRaza) VALUES ((SELECT IdEspecie FROM Especie WHERE NombreEspecie = 'Conejo'), 'Rex')")
+        db.execSQL("INSERT INTO Raza (IdEspecie, NombreRaza) VALUES ((SELECT IdEspecie FROM Especie WHERE NombreEspecie = 'Conejo'), 'Enano Holandés')")
 
         // Tabla: Mascota (Debe tener dueño, especie y raza)
         db.execSQL("""

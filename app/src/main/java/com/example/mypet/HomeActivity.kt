@@ -10,6 +10,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mypet.adapter.PetAdapter
+import com.example.mypet.dao.MascotaDAO
 import com.example.mypet.entity.Mascota
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
@@ -17,19 +18,17 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var rvPets : RecyclerView
     private lateinit var petAdapter: PetAdapter
 
+    val mascotaDAO = MascotaDAO(this)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_home)
 
         rvPets = findViewById(R.id.rvPets)
-        val mascotas = listOf(
-            Mascota(1,1,"Pipa","01-01-2020",1,1,"F","8.5Kg",true,false,"Le gusta dormir mucho",true),
-            Mascota(2,1,"Pipe","01-01-2020",2,1,"F","8.5Kg",true,false,"Le gusta dormir mucho",true),
-        )
 
-        petAdapter = PetAdapter(mascotas)
-
+        val mascotasConDetalle = mascotaDAO.obtenerMascotasConDetalle(1)
+        petAdapter = PetAdapter(mascotasConDetalle)
         rvPets.layoutManager = LinearLayoutManager(this)
         rvPets.adapter = petAdapter
 

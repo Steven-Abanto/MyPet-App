@@ -19,6 +19,26 @@ class EspecieDAO(context: Context) {
 //    }
 
 
+    fun obtenerEspecies() : List<Especie> {
+        val db = dbHelper.readableDatabase
+        val especie = mutableListOf<Especie>()
+        val cursor: Cursor = db.rawQuery(
+            "SELECT * FROM Especie",
+            null
+        )
+        while (cursor.moveToNext()) {
+            especie.add(
+                Especie(
+                    idEspecie = cursor.getInt(cursor.getColumnIndexOrThrow("IdEspecie")),
+                    nombreEspecie = cursor.getString(cursor.getColumnIndexOrThrow("NombreEspecie"))
+                )
+            )
+        }
+        cursor.close()
+        db.close()
+        return especie
+    }
+
     fun obtenerEspeciePorId(idEspecie : Int) : List<Especie> {
         val db = dbHelper.readableDatabase
         val especie = mutableListOf<Especie>()

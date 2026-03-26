@@ -8,9 +8,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.lottie.LottieAnimationView
 import com.example.mypet.R
-import com.example.mypet.entity.Mascota
+import com.example.mypet.entity.MascotaDetalle
 
-class PetAdapter (private val mascotaList: List<Mascota>) : RecyclerView.Adapter<PetAdapter.PetViewHolder>() {
+class PetAdapter (private val mascotaList: List<MascotaDetalle>) : RecyclerView.Adapter<PetAdapter.PetViewHolder>() {
 
     inner class PetViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         val petImage: LottieAnimationView = itemView.findViewById(R.id.lavPetImage)
@@ -35,9 +35,9 @@ class PetAdapter (private val mascotaList: List<Mascota>) : RecyclerView.Adapter
         val pet = mascotaList[position]
         holder.petName.text = pet.nombres
         holder.petAge.text = pet.fechaNacimiento
-        holder.petSpecies.text = pet.idEspecie.toString()
-        holder.petBreed.text = pet.idRaza.toString()
-        holder.petWeight.text = pet.pesoActual
+        holder.petSpecies.text = pet.nombreEspecie
+        holder.petBreed.text = pet.nombreRaza
+        holder.petWeight.text = "${pet.pesoActual} Kg"
 
         when (pet.idEspecie) {
             1 -> holder.petImage.setAnimation(R.raw.dogwalking)

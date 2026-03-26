@@ -18,6 +18,26 @@ class RazaDAO(context: Context) {
 //        return db.insert("Raza", null, values)
 //    }
 
+    fun obtenerRazas() : List<Raza> {
+        val db = dbHelper.readableDatabase
+        val raza = mutableListOf<Raza>()
+        val cursor: Cursor = db.rawQuery(
+            "SELECT * FROM Raza",
+            null
+        )
+        while (cursor.moveToNext()) {
+            raza.add(
+                Raza(
+                    idRaza = cursor.getInt(cursor.getColumnIndexOrThrow("IdRaza")),
+                    idEspecie = cursor.getInt(cursor.getColumnIndexOrThrow("IdEspecie")),
+                    nombreRaza = cursor.getString(cursor.getColumnIndexOrThrow("NombreRaza"))
+                )
+            )
+        }
+        cursor.close()
+        db.close()
+        return raza
+    }
 
     fun obtenerRazaPorId(idRaza : Int) : List<Raza> {
         val db = dbHelper.readableDatabase
@@ -25,6 +45,27 @@ class RazaDAO(context: Context) {
         val cursor: Cursor = db.rawQuery(
             "SELECT * FROM Raza WHERE IdRaza = ?",
             arrayOf(idRaza.toString())
+        )
+        while (cursor.moveToNext()) {
+            raza.add(
+                Raza(
+                    idRaza = cursor.getInt(cursor.getColumnIndexOrThrow("IdRaza")),
+                    idEspecie = cursor.getInt(cursor.getColumnIndexOrThrow("IdEspecie")),
+                    nombreRaza = cursor.getString(cursor.getColumnIndexOrThrow("NombreRaza"))
+                )
+            )
+        }
+        cursor.close()
+        db.close()
+        return raza
+    }
+
+    fun obtenerRazaPorIdEspecie(idEspecie : Int) : List<Raza> {
+        val db = dbHelper.readableDatabase
+        val raza = mutableListOf<Raza>()
+        val cursor: Cursor = db.rawQuery(
+            "SELECT * FROM Raza WHERE IdEspecie = ?",
+            arrayOf(idEspecie.toString())
         )
         while (cursor.moveToNext()) {
             raza.add(
