@@ -8,10 +8,12 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.mypet.firebase.AuthHelper
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 
 class RecoverActivity : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -33,10 +35,24 @@ class RecoverActivity : AppCompatActivity() {
 
             if (email.isEmpty()) {
                 emailInputLayout.error = "Por favor, ingresa tu correo"
+                return@setOnClickListener
             } else {
                 emailInputLayout.error = null
-                Toast.makeText(this, "Correo de recuperación enviado", Toast.LENGTH_SHORT).show()
             }
+
+            AuthHelper.auth.sendPasswordResetEmail(email)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        Toast.makeText(this, "Correo de recuperación enviado", Toast.LENGTH_SHORT).show()
+                        finish()
+                    } else {
+                        Toast.makeText(
+                            this,
+                            task.exception?.message ?: "No se pudo enviar el correo",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
         }
 
         tvBackToLogin.setOnClickListener {

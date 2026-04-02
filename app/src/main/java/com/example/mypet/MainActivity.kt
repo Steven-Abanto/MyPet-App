@@ -9,31 +9,31 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.mypet.firebase.AuthHelper
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var tilEmail : TextInputLayout
-    private lateinit var etEmail : TextInputEditText
-    private lateinit var tilPassword : TextInputLayout
-    private lateinit var etPassword : TextInputEditText
-    private lateinit var btnLogin : Button
-    private lateinit var btnRegister : Button
-    private lateinit var tvRecoverPassword : TextView
+    private lateinit var tilEmail: TextInputLayout
+    private lateinit var etEmail: TextInputEditText
+    private lateinit var tilPassword: TextInputLayout
+    private lateinit var etPassword: TextInputEditText
+    private lateinit var btnLogin: Button
+    private lateinit var btnRegister: Button
+    private lateinit var tvRecoverPassword: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
 
-        var tilEmail = findViewById<TextInputLayout>(R.id.tilEmail)
-        var etEmail = findViewById<TextInputEditText>(R.id.etEmail)
-        var tilPassword = findViewById<TextInputLayout>(R.id.tilPassword)
-        var etPassword = findViewById<TextInputEditText>(R.id.etPassword)
-        var btnLogin = findViewById<Button>(R.id.btnLogin)
-        var btnRegister = findViewById<Button>(R.id.btnRegister)
-        var tvRecoverPassword = findViewById<TextView>(R.id.tvRecoverPassword)
-
+        tilEmail = findViewById(R.id.tilEmail)
+        etEmail = findViewById(R.id.etEmail)
+        tilPassword = findViewById(R.id.tilPassword)
+        etPassword = findViewById(R.id.etPassword)
+        btnLogin = findViewById(R.id.btnLogin)
+        btnRegister = findViewById(R.id.btnRegister)
+        tvRecoverPassword = findViewById(R.id.tvRecoverPassword)
 
         btnLogin.setOnClickListener{
             val email = etEmail.text.toString().trim()
@@ -56,9 +56,30 @@ class MainActivity : AppCompatActivity() {
             }
 
             if (isValid) {
-                val intent = Intent(this, HomeActivity::class.java)
-                startActivity(intent)
-                finish()
+                AuthHelper.auth.signInWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(this) { task ->
+                        if (task.isSuccessful) {
+                            val firebaseUser = AuthHelper.auth.currentUser
+
+                            val sharedPreferences = getSharedPreferences("mypet_session", MODE_PRIVATE)
+                            sharedPreferences.edit()
+                                .putString("firebaseUid", firebaseUser?.uid)
+                                .putString("email", firebaseUser?.email)
+                                .apply()
+
+                            Toast.makeText(this, "Inicio de sesión exitoso", Toast.LENGTH_SHORT).show()
+
+                            val intent = Intent(this@MainActivity, HomeActivity::class.java)
+                            startActivity(intent)
+                            finish()
+                        } else {
+                            Toast.makeText(
+                                this@MainActivity,
+                                task.exception?.message ?: "Correo o contraseña incorrectos",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
             } else {
                 Toast.makeText(this, "Por favor, completa todos los campos", Toast.LENGTH_SHORT).show()
             }
@@ -78,6 +99,17 @@ class MainActivity : AppCompatActivity() {
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        val currentUser = AuthHelper.auth.currentUser
+        if (currentUser != null) {
+            val intent = Intent(this, HomeActivity::class.java)
+            startActivity(intent)
+            finish()
         }
     }
 }

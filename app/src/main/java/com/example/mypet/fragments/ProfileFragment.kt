@@ -1,27 +1,22 @@
 package com.example.mypet.fragments
 
+import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import com.example.mypet.R
-import com.example.mypet.dao.UsuarioDAO // Asegúrate de que la ruta sea correcta
+import com.example.mypet.entity.firestore.UsuarioFirestore
+import com.example.mypet.firebase.AuthHelper
+import com.example.mypet.firebase.FirestoreHelper
 import com.google.android.material.button.MaterialButton
 
 class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
-    private lateinit var usuarioDAO: UsuarioDAO
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Inicializamos el DAO
-        usuarioDAO = UsuarioDAO(requireContext())
-
-        // Campos del fragment
         val tvNombre = view.findViewById<TextView>(R.id.tvProfileNameText)
         val tvApellidos = view.findViewById<TextView>(R.id.tvProfileLastnameText)
         val tvEmail = view.findViewById<TextView>(R.id.tvProfileEmailText)
@@ -31,21 +26,43 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
         val btnEdit = view.findViewById<MaterialButton>(R.id.btnProfileEdit)
 
-        // Seteamos id de prueba para cargar datos
-        val idUsuarioLogueado = 1
-        val usuario = usuarioDAO.obtenerUsuarioPorId(idUsuarioLogueado)[0]
+        val currentUser = AuthHelper.auth.currentUser
 
-        // Se cargan datos
-        if (usuario != null) {
-            tvNombre.text = usuario.nombres
-            tvApellidos.text = "${usuario.apellidoPaterno} ${usuario.apellidoMaterno}"
-            tvFechaNacimiento.text = usuario.fechaNacimiento
-            tvPronombre.text = usuario.pronombre
-            tvEmail.text = usuario.email
-            tvTelefono.text = usuario.telefono
-        } else {
-            Toast.makeText(requireContext(), "No se pudo cargar la información", Toast.LENGTH_SHORT).show()
+        if (currentUser == null) {
+            Toast.makeText(requireContext(), "No hay sesión activa", Toast.LENGTH_SHORT).show()
+            return
         }
+
+        val firebaseUid = currentUser.uid
+
+        FirestoreHelper.db.collection("usuarios")
+            .document(firebaseUid)
+            .get()
+            .addOnSuccessListener { document ->
+                if (document.exists()) {
+                    val usuario = document.toObject(UsuarioFirestore::class.java)
+
+                    if (usuario != null) {
+                        tvNombre.text = usuario.nombres
+                        tvApellidos.text = "${usuario.apellidoPaterno} ${usuario.apellidoMaterno}"
+                        tvEmail.text = usuario.email
+                        tvTelefono.text = if (usuario.telefono.isNotEmpty()) usuario.telefono else "No registrado"
+                        tvFechaNacimiento.text = if (usuario.fechaNacimiento.isNotEmpty()) usuario.fechaNacimiento else "No registrada"
+                        tvPronombre.text = if (usuario.pronombre.isNotEmpty()) usuario.pronombre else "No especificado"
+                    } else {
+                        Toast.makeText(requireContext(), "No se pudo convertir la información del usuario", Toast.LENGTH_SHORT).show()
+                    }
+                } else {
+                    Toast.makeText(requireContext(), "Usuario no encontrado", Toast.LENGTH_SHORT).show()
+                }
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(
+                    requireContext(),
+                    "Error al cargar el perfil: ${e.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
 
         btnEdit.setOnClickListener {
             parentFragmentManager.beginTransaction()

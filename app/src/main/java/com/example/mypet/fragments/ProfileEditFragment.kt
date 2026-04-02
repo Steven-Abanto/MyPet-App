@@ -1,24 +1,26 @@
 package com.example.mypet.fragments
 
 import android.app.DatePickerDialog
-import android.content.ContentValues
+import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.example.idatdemo.data.AppDatabaseHelper
 import com.example.mypet.R
-import com.example.mypet.dao.UsuarioDAO
+import com.example.mypet.entity.firestore.UsuarioFirestore
+import com.example.mypet.firebase.AuthHelper
+import com.example.mypet.firebase.FirestoreHelper
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import java.util.Calendar
 
 class ProfileEditFragment : Fragment(R.layout.fragment_profile_edit) {
-    private lateinit var usuarioDAO: UsuarioDAO
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         val btnSave = view.findViewById<MaterialButton>(R.id.btnProfileEditEditSave)
         val etFecha = view.findViewById<TextInputEditText>(R.id.etFecha)
         val actvGender = view.findViewById<AutoCompleteTextView>(R.id.actvGender)
@@ -27,23 +29,43 @@ class ProfileEditFragment : Fragment(R.layout.fragment_profile_edit) {
         val etProfileEditEmail = view.findViewById<TextInputEditText>(R.id.etProfileEditEmail)
         val etProfileEditPhone = view.findViewById<TextInputEditText>(R.id.etProfileEditPhone)
 
-        // Inicializamos el DAO
-        usuarioDAO = UsuarioDAO(requireContext())
-        // Seteamos id de prueba para cargar datos
-        val idUsuarioLogueado = 1
-        val usuario = usuarioDAO.obtenerUsuarioPorId(idUsuarioLogueado)[0]
+        val currentUser = AuthHelper.auth.currentUser
 
-        // Se cargan datos
-        if (usuario != null) {
-            etProfileEditName.setText(usuario.nombres)
-            etProfileEditLastname.setText("${usuario.apellidoPaterno} ${usuario.apellidoMaterno}")
-            etFecha.setText(usuario.fechaNacimiento)
-            actvGender.setText(usuario.pronombre)
-            etProfileEditEmail.setText(usuario.email)
-            etProfileEditPhone.setText(usuario.telefono)
-        } else {
-            Toast.makeText(requireContext(), "No se pudo cargar la información", Toast.LENGTH_SHORT).show()
+        if (currentUser == null) {
+            Toast.makeText(requireContext(), "No hay sesión activa", Toast.LENGTH_SHORT).show()
+            return
         }
+
+        val firebaseUid = currentUser.uid
+
+        FirestoreHelper.db.collection("usuarios")
+            .document(firebaseUid)
+            .get()
+            .addOnSuccessListener { document ->
+                if (document.exists()) {
+                    val usuario = document.toObject(UsuarioFirestore::class.java)
+
+                    if (usuario != null) {
+                        etProfileEditName.setText(usuario.nombres)
+                        etProfileEditLastname.setText("${usuario.apellidoPaterno} ${usuario.apellidoMaterno}")
+                        etFecha.setText(usuario.fechaNacimiento)
+                        actvGender.setText(usuario.pronombre, false)
+                        etProfileEditEmail.setText(usuario.email)
+                        etProfileEditPhone.setText(usuario.telefono)
+                    } else {
+                        Toast.makeText(requireContext(), "No se pudo cargar el usuario", Toast.LENGTH_SHORT).show()
+                    }
+                } else {
+                    Toast.makeText(requireContext(), "Usuario no encontrado", Toast.LENGTH_SHORT).show()
+                }
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(
+                    requireContext(),
+                    "Error al cargar los datos: ${e.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
 
         val adapter = ArrayAdapter(
             requireContext(),
@@ -76,45 +98,60 @@ class ProfileEditFragment : Fragment(R.layout.fragment_profile_edit) {
         }
 
         btnSave.setOnClickListener {
-//            parentFragmentManager.popBackStack()
-            val dbHelper = AppDatabaseHelper(requireContext())
+            val nombres = etProfileEditName.text.toString().trim()
+            val apellidosTexto = etProfileEditLastname.text.toString().trim()
+            val email = etProfileEditEmail.text.toString().trim()
+            val telefono = etProfileEditPhone.text.toString().trim()
+            val fechaNacimiento = etFecha.text.toString().trim()
+            val pronombre = actvGender.text.toString().trim()
 
-            val apellidos = etProfileEditLastname.text.toString().trimStart().split(" ")
-            val apeP = apellidos.get(0)
-            val apeM = apellidos.get(1)
-
-            val db = dbHelper.writableDatabase
-            val valoresUsuario = ContentValues().apply {
-                put("Nombres",  etProfileEditName.text.toString().trim())
-                put("ApellidoPaterno", apeP)
-                put("ApellidoMaterno", apeM)
-                put("Pronombre", actvGender.text.toString())
-                put("FechaNacimiento", etFecha.text.toString())
-                put("Email", etProfileEditEmail.text.toString().trim())
-                put("Telefono", etProfileEditPhone.text.toString())
-                put("ContrasenaHashed", usuario.contrasenaHashed)
-                put("FechaCreacion", usuario.fechaCreacion)
-                put("Activo", true)
+            if (nombres.isEmpty() || apellidosTexto.isEmpty() || email.isEmpty()) {
+                Toast.makeText(requireContext(), "Completa los campos obligatorios", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
             }
 
-//            val idUsuario = db.insert("Usuario", null, valoresUsuario)
+            val partesApellidos = apellidosTexto.split("\\s+".toRegex())
 
-            val filasAfectadas = db.update("Usuario",
-                valoresUsuario,
-                "idUsuario = ?",
-                arrayOf(usuario.idUsuario.toString())
+            if (partesApellidos.size < 2) {
+                Toast.makeText(
+                    requireContext(),
+                    "Ingresa apellido paterno y materno",
+                    Toast.LENGTH_SHORT
+                ).show()
+                return@setOnClickListener
+            }
+
+            val apeP = partesApellidos[0]
+            val apeM = partesApellidos.drop(1).joinToString(" ")
+
+            val dataActualizada = mapOf(
+                "nombres" to nombres,
+                "apellidoPaterno" to apeP,
+                "apellidoMaterno" to apeM,
+                "email" to email,
+                "telefono" to telefono,
+                "fechaNacimiento" to fechaNacimiento,
+                "pronombre" to pronombre,
+                "activo" to true
             )
 
-            if (filasAfectadas > 0) {
-                Toast.makeText(requireContext(), "Registro exitoso", Toast.LENGTH_SHORT).show()
-            } else {
-                Toast.makeText(requireContext(), "Error al registrar", Toast.LENGTH_SHORT).show()
-            }
+            FirestoreHelper.db.collection("usuarios")
+                .document(firebaseUid)
+                .update(dataActualizada)
+                .addOnSuccessListener {
+                    Toast.makeText(requireContext(), "Perfil actualizado", Toast.LENGTH_SHORT).show()
 
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.fragmentProfileContainer, ProfileFragment())
-                .addToBackStack(null)
-                .commit()
+                    parentFragmentManager.beginTransaction()
+                        .replace(R.id.fragmentProfileContainer, ProfileFragment())
+                        .commit()
+                }
+                .addOnFailureListener { e ->
+                    Toast.makeText(
+                        requireContext(),
+                        "Error al actualizar: ${e.message}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
         }
     }
 }
