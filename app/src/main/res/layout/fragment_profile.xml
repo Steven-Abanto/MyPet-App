@@ -10,7 +10,7 @@
 
     <TextView
         android:id="@+id/tvContent"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:fontFamily="@font/milkshake"
         android:padding="20dp"
@@ -19,27 +19,44 @@
         android:textColor="#8BC34A"
         android:textSize="40sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@id/clProfileInfo"
         app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="0dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/clProfileInfo"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="0dp"
         android:padding="35dp"
-        android:orientation="vertical"
-        app:layout_constraintTop_toBottomOf="@id/tvContent">
+        app:layout_constraintTop_toBottomOf="@id/tvContent"
+        app:layout_constraintBottom_toTopOf="@id/btnLogout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-        <ImageView
-            android:id="@+id/ivProfilePic"
+        <FrameLayout
+            android:id="@+id/profilePicContainer"
             android:layout_width="150dp"
             android:layout_height="150dp"
-            android:padding="10dp"
-            android:src="@drawable/ic_person"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:tint="#00CEC8" />
+            app:layout_constraintStart_toStartOf="parent">
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/lottieProfile"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:lottie_autoPlay="true"
+                app:lottie_loop="true"
+                app:lottie_rawRes="@raw/noprofilepic"
+                android:scaleType="centerCrop" />
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/ivProfilePic"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:visibility="gone"
+                app:shapeAppearanceOverlay="@style/CircleImageStyle" />
+        </FrameLayout>
 
         <LinearLayout
             android:id="@+id/llProfileName"
@@ -49,7 +66,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginBottom="15dp"
             android:layout_marginStart="10dp"
-            app:layout_constraintStart_toEndOf="@id/ivProfilePic"
+            app:layout_constraintStart_toEndOf="@id/profilePicContainer"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
             <TextView
@@ -78,7 +95,7 @@
             android:layout_marginBottom="15dp"
             android:layout_marginStart="10dp"
             app:layout_constraintTop_toBottomOf="@id/llProfileName"
-            app:layout_constraintStart_toEndOf="@id/ivProfilePic"
+            app:layout_constraintStart_toEndOf="@id/profilePicContainer"
             app:layout_constraintEnd_toEndOf="parent">
             <TextView
                 android:id="@+id/tvProfileLastname"
@@ -111,7 +128,7 @@
             android:layout_marginVertical="15dp"
             android:orientation="horizontal"
             android:weightSum="3"
-            app:layout_constraintTop_toBottomOf="@+id/ivProfilePic"
+            app:layout_constraintTop_toBottomOf="@+id/profilePicContainer"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
 
@@ -224,18 +241,29 @@
 
         </com.google.android.material.button.MaterialButton>
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnProfilePasswordEdit"
+            app:icon="@drawable/ic_edit"
+            android:layout_marginVertical="15dp"
+            android:text="Cambiar contraseña"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#A9A9A9"
+            app:layout_constraintTop_toBottomOf="@id/btnProfileEdit">
+        </com.google.android.material.button.MaterialButton>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnLogout"
-        app:icon="@drawable/ic_edit"
-        android:layout_marginBottom="120dp"
-        android:layout_marginHorizontal="35dp"
-        android:text="Cerrar Sesión"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="35dp"
+        android:layout_marginVertical="15dp"
+        android:text="Cerrar Sesión"
         android:backgroundTint="#FA4C4C"
-        app:layout_constraintBottom_toBottomOf="parent">
-
-    </com.google.android.material.button.MaterialButton>
+        app:icon="@drawable/ic_edit"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

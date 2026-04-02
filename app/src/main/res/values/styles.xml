@@ -4,4 +4,8 @@
         <item name="boxStrokeColor">@color/text_input_states</item>
         <item name="boxStrokeWidth">2dp</item>
     </style>
+    <style name="CircleImageStyle">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">75dp</item>
+    </style>
 </resources>
