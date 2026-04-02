@@ -1,7 +1,6 @@
 package com.example.mypet.fragments
 
 import android.app.DatePickerDialog
-import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.widget.ArrayAdapter
@@ -50,8 +49,13 @@ class ProfileEditFragment : Fragment(R.layout.fragment_profile_edit) {
                         etProfileEditLastname.setText("${usuario.apellidoPaterno} ${usuario.apellidoMaterno}")
                         etFecha.setText(usuario.fechaNacimiento)
                         actvGender.setText(usuario.pronombre, false)
-                        etProfileEditEmail.setText(usuario.email)
                         etProfileEditPhone.setText(usuario.telefono)
+
+                        // El email ya no se edita aquí
+                        etProfileEditEmail.setText(usuario.email)
+                        etProfileEditEmail.isEnabled = false
+                        etProfileEditEmail.isFocusable = false
+                        etProfileEditEmail.isClickable = false
                     } else {
                         Toast.makeText(requireContext(), "No se pudo cargar el usuario", Toast.LENGTH_SHORT).show()
                     }
@@ -100,12 +104,11 @@ class ProfileEditFragment : Fragment(R.layout.fragment_profile_edit) {
         btnSave.setOnClickListener {
             val nombres = etProfileEditName.text.toString().trim()
             val apellidosTexto = etProfileEditLastname.text.toString().trim()
-            val email = etProfileEditEmail.text.toString().trim()
             val telefono = etProfileEditPhone.text.toString().trim()
             val fechaNacimiento = etFecha.text.toString().trim()
             val pronombre = actvGender.text.toString().trim()
 
-            if (nombres.isEmpty() || apellidosTexto.isEmpty() || email.isEmpty()) {
+            if (nombres.isEmpty() || apellidosTexto.isEmpty()) {
                 Toast.makeText(requireContext(), "Completa los campos obligatorios", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
@@ -128,7 +131,6 @@ class ProfileEditFragment : Fragment(R.layout.fragment_profile_edit) {
                 "nombres" to nombres,
                 "apellidoPaterno" to apeP,
                 "apellidoMaterno" to apeM,
-                "email" to email,
                 "telefono" to telefono,
                 "fechaNacimiento" to fechaNacimiento,
                 "pronombre" to pronombre,

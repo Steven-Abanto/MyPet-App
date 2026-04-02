@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/mbCambiar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        android:text="Cambiar imagen de perfil"
+        android:backgroundTint="#79DB70"
+        app:icon="@drawable/ic_change_pic"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/mbEliminar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        android:text="Eliminar imagen de perfil"
+        android:backgroundTint="#FA4C4C"
+        app:icon="@drawable/ic_delete"/>
+
+</LinearLayout>

@@ -129,8 +129,9 @@
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
 
+
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/tilProfileEditEmail"
+            android:id="@+id/tilProfileEditPhone"
             android:layout_width="0dp"
             app:boxStrokeColor="#8BC34A"
             android:layout_height="wrap_content"
@@ -138,8 +139,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etProfileEditEmail"
-                android:hint="Email de contacto"
+                android:id="@+id/etProfileEditPhone"
+                android:hint="Teléfono de contacto"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="parent"
@@ -148,17 +149,17 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/tilProfileEditPhone"
+            android:id="@+id/tilProfileEditEmail"
             android:layout_marginVertical="10dp"
             android:layout_width="0dp"
             app:boxStrokeColor="#8BC34A"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/tilProfileEditEmail"
+            app:layout_constraintTop_toBottomOf="@id/tilProfileEditPhone"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etProfileEditPhone"
-                android:hint="Teléfono de contacto"
+                android:id="@+id/etProfileEditEmail"
+                android:hint="Email de contacto"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="parent"
@@ -174,8 +175,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="#8BC34A"
-            app:layout_constraintTop_toBottomOf="@id/tilProfileEditPhone">
-
+            app:layout_constraintTop_toBottomOf="@id/tilProfileEditEmail">
         </com.google.android.material.button.MaterialButton>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
