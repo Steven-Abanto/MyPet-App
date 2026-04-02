@@ -1,11 +1,13 @@
 package com.example.mypet.fragments
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.example.mypet.MainActivity
 import com.example.mypet.R
 import com.example.mypet.entity.firestore.UsuarioFirestore
 import com.example.mypet.firebase.AuthHelper
@@ -25,6 +27,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         val tvPronombre = view.findViewById<TextView>(R.id.tvProfileGenderText)
 
         val btnEdit = view.findViewById<MaterialButton>(R.id.btnProfileEdit)
+        val btnLogout = view.findViewById<MaterialButton>(R.id.btnLogout)
 
         val currentUser = AuthHelper.auth.currentUser
 
@@ -69,6 +72,21 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                 .replace(R.id.fragmentProfileContainer, ProfileEditFragment())
                 .addToBackStack(null)
                 .commit()
+        }
+
+        btnLogout.setOnClickListener {
+            AuthHelper.auth.signOut()
+
+            val sharedPreferences = requireActivity()
+                .getSharedPreferences("mypet_session", android.content.Context.MODE_PRIVATE)
+
+            sharedPreferences.edit().clear().apply()
+
+            val intent = Intent(requireContext(), MainActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(intent)
+
+            requireActivity().finish()
         }
     }
 }
