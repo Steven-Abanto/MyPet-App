@@ -31,17 +31,30 @@
         android:orientation="vertical"
         app:layout_constraintTop_toBottomOf="@id/tvContent">
 
-        <ImageView
-            android:id="@+id/ivProfileEditPic"
+        <FrameLayout
+            android:id="@+id/profileEditPicContainer"
             android:layout_width="150dp"
             android:layout_height="150dp"
-            android:background="@drawable/ll_borders_edit"
-            android:backgroundTint="#8BC34A"
-            android:padding="10dp"
-            android:src="@drawable/ic_add_person"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:tint="#00CEC8" />
+            app:layout_constraintStart_toStartOf="parent">
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/lottieProfileEdit"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:lottie_autoPlay="true"
+                app:lottie_loop="true"
+                app:lottie_rawRes="@raw/noprofilepic"
+                android:scaleType="centerCrop" />
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/ivProfilePicEdit"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:visibility="gone"
+                app:shapeAppearanceOverlay="@style/CircleImageStyle" />
+        </FrameLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tilProfileEditName"
@@ -49,7 +62,7 @@
             android:layout_marginStart="10dp"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toEndOf="@id/ivProfileEditPic"
+            app:layout_constraintStart_toEndOf="@id/profileEditPicContainer"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent">
             <com.google.android.material.textfield.TextInputEditText
@@ -68,7 +81,7 @@
             android:layout_marginStart="10dp"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toEndOf="@id/ivProfileEditPic"
+            app:layout_constraintStart_toEndOf="@id/profileEditPicContainer"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tilProfileEditName">
             <com.google.android.material.textfield.TextInputEditText
@@ -87,7 +100,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:weightSum="3"
-            app:layout_constraintTop_toBottomOf="@+id/ivProfileEditPic"
+            app:layout_constraintTop_toBottomOf="@+id/profileEditPicContainer"
             app:layout_constraintStart_toStartOf="parent">
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilProfileEditBirthdate"

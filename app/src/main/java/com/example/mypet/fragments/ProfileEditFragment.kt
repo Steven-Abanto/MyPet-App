@@ -1,24 +1,58 @@
 package com.example.mypet.fragments
 
+import android.app.AlertDialog
 import android.app.DatePickerDialog
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
+import com.airbnb.lottie.LottieAnimationView
 import com.example.mypet.R
+import com.example.mypet.dao.UsuarioDAO
+import com.example.mypet.entity.Usuario
 import com.example.mypet.entity.firestore.UsuarioFirestore
 import com.example.mypet.firebase.AuthHelper
 import com.example.mypet.firebase.FirestoreHelper
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.imageview.ShapeableImageView
 import com.google.android.material.textfield.TextInputEditText
+import java.io.File
+import java.io.FileOutputStream
 import java.util.Calendar
 
 class ProfileEditFragment : Fragment(R.layout.fragment_profile_edit) {
+    private lateinit var usuarioDAO: UsuarioDAO
+    private lateinit var ivProfilePic: ShapeableImageView
+    private lateinit var lottieProfile: LottieAnimationView
+    private lateinit var profilePicContainer: View
+
+    private val pickImageLauncher =
+        registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri: Uri? ->
+            if (uri != null) {
+                try {
+                    requireContext().contentResolver.takePersistableUriPermission(
+                        uri,
+                        Intent.FLAG_GRANT_READ_URI_PERMISSION
+                    )
+                } catch (_: Exception) {
+                }
+
+//                guardarUriFoto(uri.toString())
+//                mostrarFotoPerfil(uri)
+                guardarImagenInterna(uri)
+            }
+        }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        usuarioDAO = UsuarioDAO(requireContext())
 
         val btnSave = view.findViewById<MaterialButton>(R.id.btnProfileEditEditSave)
         val etFecha = view.findViewById<TextInputEditText>(R.id.etFecha)
@@ -28,6 +62,10 @@ class ProfileEditFragment : Fragment(R.layout.fragment_profile_edit) {
         val etProfileEditEmail = view.findViewById<TextInputEditText>(R.id.etProfileEditEmail)
         val etProfileEditPhone = view.findViewById<TextInputEditText>(R.id.etProfileEditPhone)
 
+        ivProfilePic = view.findViewById(R.id.ivProfilePicEdit)
+        lottieProfile = view.findViewById(R.id.lottieProfileEdit)
+        profilePicContainer = view.findViewById(R.id.profileEditPicContainer)
+
         val currentUser = AuthHelper.auth.currentUser
 
         if (currentUser == null) {
@@ -36,6 +74,7 @@ class ProfileEditFragment : Fragment(R.layout.fragment_profile_edit) {
         }
 
         val firebaseUid = currentUser.uid
+        cargarFotoGuardada()
 
         FirestoreHelper.db.collection("usuarios")
             .document(firebaseUid)
@@ -64,11 +103,28 @@ class ProfileEditFragment : Fragment(R.layout.fragment_profile_edit) {
                 }
             }
             .addOnFailureListener { e ->
-                Toast.makeText(
-                    requireContext(),
-                    "Error al cargar los datos: ${e.message}",
-                    Toast.LENGTH_SHORT
-                ).show()
+                val usuarioLocal = usuarioDAO.obtenerPorFirebaseUid(firebaseUid)
+
+                if (usuarioLocal != null) {
+                    etProfileEditName.setText(usuarioLocal.nombres)
+                    etProfileEditLastname.setText("${usuarioLocal.apellidoPaterno} ${usuarioLocal.apellidoMaterno}")
+                    etFecha.setText(usuarioLocal.fechaNacimiento)
+                    actvGender.setText(usuarioLocal.pronombre, false)
+                    etProfileEditPhone.setText(usuarioLocal.telefono)
+
+                    etProfileEditEmail.setText(usuarioLocal.email)
+                    etProfileEditEmail.isEnabled = false
+                    etProfileEditEmail.isFocusable = false
+                    etProfileEditEmail.isClickable = false
+
+                    Toast.makeText(requireContext(), "Mostrando datos locales (modo offline)", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(
+                        requireContext(),
+                        "Error al cargar los datos: ${e.message}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             }
 
         val adapter = ArrayAdapter(
@@ -101,12 +157,34 @@ class ProfileEditFragment : Fragment(R.layout.fragment_profile_edit) {
             datePicker.show()
         }
 
+        profilePicContainer.setOnClickListener {
+            val dialogView = layoutInflater.inflate(R.layout.modal_pic_options, null)
+            val dialog = AlertDialog.Builder(requireContext())
+                .setView(dialogView)
+                .create()
+            dialog.show()
+
+            val btnEliminar = dialogView.findViewById<MaterialButton>(R.id.mbEliminar)
+            btnEliminar.setOnClickListener {
+                eliminarFotoLocal()
+                dialog.dismiss()
+            }
+
+            val btnCambiar = dialogView.findViewById<MaterialButton>(R.id.mbCambiar)
+            btnCambiar.setOnClickListener {
+                pickImageLauncher.launch(arrayOf("image/*"))
+                dialog.dismiss()
+            }
+            true
+        }
+
         btnSave.setOnClickListener {
             val nombres = etProfileEditName.text.toString().trim()
             val apellidosTexto = etProfileEditLastname.text.toString().trim()
             val telefono = etProfileEditPhone.text.toString().trim()
             val fechaNacimiento = etFecha.text.toString().trim()
             val pronombre = actvGender.text.toString().trim()
+            val emailActual = currentUser.email ?: etProfileEditEmail.text.toString().trim()
 
             if (nombres.isEmpty() || apellidosTexto.isEmpty()) {
                 Toast.makeText(requireContext(), "Completa los campos obligatorios", Toast.LENGTH_SHORT).show()
@@ -141,6 +219,21 @@ class ProfileEditFragment : Fragment(R.layout.fragment_profile_edit) {
                 .document(firebaseUid)
                 .update(dataActualizada)
                 .addOnSuccessListener {
+                    val usuarioLocal = Usuario(
+                        idUsuario = 0,
+                        firebaseUid = firebaseUid,
+                        nombres = nombres,
+                        apellidoPaterno = apeP,
+                        apellidoMaterno = apeM,
+                        email = emailActual,
+                        telefono = telefono,
+                        fechaNacimiento = fechaNacimiento,
+                        pronombre = pronombre,
+                        activo = true
+                    )
+
+                    usuarioDAO.guardarOActualizar(usuarioLocal)
+
                     Toast.makeText(requireContext(), "Perfil actualizado", Toast.LENGTH_SHORT).show()
 
                     parentFragmentManager.beginTransaction()
@@ -155,5 +248,69 @@ class ProfileEditFragment : Fragment(R.layout.fragment_profile_edit) {
                     ).show()
                 }
         }
+    }
+
+    private fun cargarFotoGuardada() {
+        val prefs = requireContext().getSharedPreferences("mypet_profile", Context.MODE_PRIVATE)
+        val path = prefs.getString("profile_image_path", null)
+
+        if (!path.isNullOrEmpty()) {
+            mostrarFotoDesdeArchivo(path)
+        } else {
+            ivProfilePic.visibility = View.GONE
+            lottieProfile.visibility = View.VISIBLE
+        }
+    }
+
+    private fun mostrarFotoDesdeArchivo(path: String) {
+        val file = File(path)
+
+        if (file.exists()) {
+            ivProfilePic.setImageURI(Uri.fromFile(file))
+            ivProfilePic.visibility = View.VISIBLE
+            lottieProfile.visibility = View.GONE
+        } else {
+            ivProfilePic.visibility = View.GONE
+            lottieProfile.visibility = View.VISIBLE
+        }
+    }
+
+    private fun guardarImagenInterna(uri: Uri) {
+        try {
+            val inputStream = requireContext().contentResolver.openInputStream(uri)
+            val file = File(requireContext().filesDir, "profile.jpg")
+            val outputStream = FileOutputStream(file)
+
+            inputStream?.copyTo(outputStream)
+
+            inputStream?.close()
+            outputStream.close()
+
+            guardarRutaLocal(file.absolutePath)
+            mostrarFotoDesdeArchivo(file.absolutePath)
+
+        } catch (e: Exception) {
+            Toast.makeText(requireContext(), "Error al guardar imagen: ${e.message}", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun guardarRutaLocal(path: String) {
+        val prefs = requireContext().getSharedPreferences("mypet_profile", Context.MODE_PRIVATE)
+        prefs.edit().putString("profile_image_path", path).apply()
+    }
+
+    private fun eliminarFotoLocal() {
+        val prefs = requireContext().getSharedPreferences("mypet_profile", Context.MODE_PRIVATE)
+        val path = prefs.getString("profile_image_path", null)
+
+        if (!path.isNullOrEmpty()) {
+            val file = File(path)
+            if (file.exists()) file.delete()
+        }
+
+        prefs.edit().remove("profile_image_path").apply()
+
+        ivProfilePic.visibility = View.GONE
+        lottieProfile.visibility = View.VISIBLE
     }
 }

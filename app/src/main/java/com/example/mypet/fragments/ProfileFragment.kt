@@ -18,15 +18,23 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.imageview.ShapeableImageView
 import com.google.firebase.auth.EmailAuthProvider
 import android.app.AlertDialog
+import android.content.Context
 import android.text.InputType
 import android.util.Log
 import android.widget.EditText
 import android.widget.LinearLayout
+import com.example.mypet.dao.UsuarioDAO
+import com.example.mypet.entity.Usuario
+import com.bumptech.glide.Glide
+import com.google.firebase.storage.FirebaseStorage
+import java.io.File
+import java.io.FileOutputStream
 
 class ProfileFragment : Fragment(R.layout.fragment_profile) {
     private lateinit var ivProfilePic: ShapeableImageView
     private lateinit var lottieProfile: LottieAnimationView
     private lateinit var profilePicContainer: View
+    private lateinit var usuarioDAO: UsuarioDAO
 
     private val pickImageLauncher =
         registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri: Uri? ->
@@ -39,13 +47,16 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                 } catch (_: Exception) {
                 }
 
-                guardarUriFoto(uri.toString())
-                mostrarFotoPerfil(uri)
+//                guardarUriFoto(uri.toString())
+//                mostrarFotoPerfil(uri)
+                guardarImagenInterna(uri)
             }
         }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        usuarioDAO = UsuarioDAO(requireContext())
 
         val tvNombre = view.findViewById<TextView>(R.id.tvProfileNameText)
         val tvApellidos = view.findViewById<TextView>(R.id.tvProfileLastnameText)
@@ -88,6 +99,21 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                             tvTelefono.text = if (usuario.telefono.isNotEmpty()) usuario.telefono else "No registrado"
                             tvFechaNacimiento.text = if (usuario.fechaNacimiento.isNotEmpty()) usuario.fechaNacimiento else "No registrada"
                             tvPronombre.text = if (usuario.pronombre.isNotEmpty()) usuario.pronombre else "No especificado"
+
+                            val usuarioLocal = Usuario(
+                                idUsuario = 0,
+                                firebaseUid = firebaseUid,
+                                nombres = usuario.nombres,
+                                apellidoPaterno = usuario.apellidoPaterno,
+                                apellidoMaterno = usuario.apellidoMaterno,
+                                email = usuario.email,
+                                telefono = usuario.telefono,
+                                fechaNacimiento = usuario.fechaNacimiento,
+                                pronombre = usuario.pronombre,
+                                activo = usuario.activo
+                            )
+
+                            usuarioDAO.guardarOActualizar(usuarioLocal)
                         } else {
                             Toast.makeText(requireContext(), "No se pudo convertir la información del usuario", Toast.LENGTH_SHORT).show()
                         }
@@ -96,11 +122,26 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                     }
                 }
                 .addOnFailureListener { e ->
-                    Toast.makeText(
-                        requireContext(),
-                        "Error al cargar el perfil: ${e.message}",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    Log.e("PROFILE_FIRESTORE", "Error al cargar desde Firestore", e)
+
+                    val usuarioLocal = usuarioDAO.obtenerPorFirebaseUid(firebaseUid)
+
+                    if (usuarioLocal != null) {
+                        tvNombre.text = usuarioLocal.nombres
+                        tvApellidos.text = "${usuarioLocal.apellidoPaterno} ${usuarioLocal.apellidoMaterno}"
+                        tvEmail.text = usuarioLocal.email
+                        tvTelefono.text = if (usuarioLocal.telefono.isNotEmpty()) usuarioLocal.telefono else "No registrado"
+                        tvFechaNacimiento.text = if (usuarioLocal.fechaNacimiento.isNotEmpty()) usuarioLocal.fechaNacimiento else "No registrada"
+                        tvPronombre.text = if (usuarioLocal.pronombre.isNotEmpty()) usuarioLocal.pronombre else "No especificado"
+
+                        Toast.makeText(requireContext(), "Mostrando datos locales (modo offline)", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(
+                            requireContext(),
+                            "Error al cargar el perfil: ${e.message}",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 }
         }
 
@@ -109,10 +150,6 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                 .replace(R.id.fragmentProfileContainer, ProfileEditFragment())
                 .addToBackStack(null)
                 .commit()
-        }
-
-        profilePicContainer.setOnClickListener {
-            pickImageLauncher.launch(arrayOf("image/*"))
         }
 
         profilePicContainer.setOnLongClickListener {
@@ -124,9 +161,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
             val btnEliminar = dialogView.findViewById<MaterialButton>(R.id.mbEliminar)
             btnEliminar.setOnClickListener {
-                guardarUriFoto("")
-                ivProfilePic.visibility = View.GONE
-                lottieProfile.visibility = View.VISIBLE
+                eliminarFotoLocal()
                 dialog.dismiss()
             }
 
@@ -151,31 +186,68 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         }
     }
 
-    private fun mostrarFotoPerfil(uri: Uri) {
-        ivProfilePic.setImageURI(uri)
-        ivProfilePic.visibility = View.VISIBLE
-        lottieProfile.visibility = View.GONE
+    private fun guardarImagenInterna(uri: Uri) {
+        try {
+            val inputStream = requireContext().contentResolver.openInputStream(uri)
+            val file = File(requireContext().filesDir, "profile.jpg")
+            val outputStream = FileOutputStream(file)
+
+            inputStream?.copyTo(outputStream)
+
+            inputStream?.close()
+            outputStream.close()
+
+            guardarRutaLocal(file.absolutePath)
+            mostrarFotoDesdeArchivo(file.absolutePath)
+
+        } catch (e: Exception) {
+            Toast.makeText(requireContext(), "Error al guardar imagen: ${e.message}", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun guardarRutaLocal(path: String) {
+        val prefs = requireContext().getSharedPreferences("mypet_profile", Context.MODE_PRIVATE)
+        prefs.edit().putString("profile_image_path", path).apply()
     }
 
     private fun cargarFotoGuardada() {
-        val prefs = requireContext().getSharedPreferences(
-            "mypet_profile",
-            android.content.Context.MODE_PRIVATE
-        )
-        val uriString = prefs.getString("profile_image_uri", null)
+        val prefs = requireContext().getSharedPreferences("mypet_profile", Context.MODE_PRIVATE)
+        val path = prefs.getString("profile_image_path", null)
 
-        if (!uriString.isNullOrEmpty()) {
-            val uri = Uri.parse(uriString)
-            mostrarFotoPerfil(uri)
+        if (!path.isNullOrEmpty()) {
+            mostrarFotoDesdeArchivo(path)
         } else {
             ivProfilePic.visibility = View.GONE
             lottieProfile.visibility = View.VISIBLE
         }
     }
 
-    private fun guardarUriFoto(uri: String) {
-        val prefs = requireContext().getSharedPreferences("mypet_profile", android.content.Context.MODE_PRIVATE)
-        prefs.edit().putString("profile_image_uri", uri).apply()
+    private fun mostrarFotoDesdeArchivo(path: String) {
+        val file = File(path)
+
+        if (file.exists()) {
+            ivProfilePic.setImageURI(Uri.fromFile(file))
+            ivProfilePic.visibility = View.VISIBLE
+            lottieProfile.visibility = View.GONE
+        } else {
+            ivProfilePic.visibility = View.GONE
+            lottieProfile.visibility = View.VISIBLE
+        }
+    }
+
+    private fun eliminarFotoLocal() {
+        val prefs = requireContext().getSharedPreferences("mypet_profile", Context.MODE_PRIVATE)
+        val path = prefs.getString("profile_image_path", null)
+
+        if (!path.isNullOrEmpty()) {
+            val file = File(path)
+            if (file.exists()) file.delete()
+        }
+
+        prefs.edit().remove("profile_image_path").apply()
+
+        ivProfilePic.visibility = View.GONE
+        lottieProfile.visibility = View.VISIBLE
     }
 
     private fun mostrarDialogCambiarPassword() {

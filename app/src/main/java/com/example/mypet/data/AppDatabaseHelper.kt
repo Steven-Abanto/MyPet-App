@@ -9,17 +9,16 @@ class AppDatabaseHelper(context : Context) : SQLiteOpenHelper(context, "mypet.db
         // Tabla: Usuario
         db.execSQL("""
             CREATE TABLE IF NOT EXISTS Usuario (
-                IdUsuario INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-                Nombres TEXT NOT NULL,
-                ApellidoPaterno TEXT NOT NULL,
-                ApellidoMaterno TEXT NOT NULL,
-                Email TEXT NOT NULL UNIQUE,
+                IdUsuario INTEGER PRIMARY KEY AUTOINCREMENT,
+                FirebaseUid TEXT UNIQUE,
+                Nombres TEXT,
+                ApellidoPaterno TEXT,
+                ApellidoMaterno TEXT,
+                Email TEXT,
                 Telefono TEXT,
-                FechaNacimiento DATE,
+                FechaNacimiento TEXT,
                 Pronombre TEXT,
-                ContrasenaHashed TEXT NOT NULL,
-                FechaCreacion DATETIME DEFAULT CURRENT_TIMESTAMP,
-                Activo BOOLEAN DEFAULT TRUE
+                Activo INTEGER
             )
         """.trimIndent())
 
