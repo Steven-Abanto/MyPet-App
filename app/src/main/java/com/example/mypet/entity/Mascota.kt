@@ -1,7 +1,8 @@
 package com.example.mypet.entity
 
-data class Mascota (
+data class Mascota(
     var idMascota: Int,
+    var firestoreId: String?,
     var idUsuario: Int,
     var nombres: String,
     var fechaNacimiento: String,

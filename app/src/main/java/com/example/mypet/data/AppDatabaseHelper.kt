@@ -6,6 +6,8 @@ import android.database.sqlite.SQLiteOpenHelper
 
 class AppDatabaseHelper(context : Context) : SQLiteOpenHelper(context, "mypet.db", null, 1) {
     override fun onCreate(db: SQLiteDatabase) {
+        db.execSQL("PRAGMA foreign_keys = ON")
+
         // Tabla: Usuario
         db.execSQL("""
             CREATE TABLE IF NOT EXISTS Usuario (
@@ -18,7 +20,7 @@ class AppDatabaseHelper(context : Context) : SQLiteOpenHelper(context, "mypet.db
                 Telefono TEXT,
                 FechaNacimiento TEXT,
                 Pronombre TEXT,
-                Activo INTEGER
+                Activo INTEGER DEFAULT 1
             )
         """.trimIndent())
 
@@ -52,6 +54,7 @@ class AppDatabaseHelper(context : Context) : SQLiteOpenHelper(context, "mypet.db
             )
         """.trimIndent())
 
+        // Razas de perro
         db.execSQL("INSERT INTO Raza (IdEspecie, NombreRaza) VALUES ((SELECT IdEspecie FROM Especie WHERE NombreEspecie = 'Perro'), 'Labrador Retriever')")
         db.execSQL("INSERT INTO Raza (IdEspecie, NombreRaza) VALUES ((SELECT IdEspecie FROM Especie WHERE NombreEspecie = 'Perro'), 'Bulldog')")
         db.execSQL("INSERT INTO Raza (IdEspecie, NombreRaza) VALUES ((SELECT IdEspecie FROM Especie WHERE NombreEspecie = 'Perro'), 'Pastor Alemán')")
@@ -59,54 +62,66 @@ class AppDatabaseHelper(context : Context) : SQLiteOpenHelper(context, "mypet.db
         db.execSQL("INSERT INTO Raza (IdEspecie, NombreRaza) VALUES ((SELECT IdEspecie FROM Especie WHERE NombreEspecie = 'Perro'), 'Poodle')")
         db.execSQL("INSERT INTO Raza (IdEspecie, NombreRaza) VALUES ((SELECT IdEspecie FROM Especie WHERE NombreEspecie = 'Perro'), 'Chihuahua')")
         db.execSQL("INSERT INTO Raza (IdEspecie, NombreRaza) VALUES ((SELECT IdEspecie FROM Especie WHERE NombreEspecie = 'Perro'), 'Rottweiler')")
+        db.execSQL("INSERT INTO Raza (IdEspecie, NombreRaza) VALUES ((SELECT IdEspecie FROM Especie WHERE NombreEspecie = 'Perro'), 'Mixto')")
+        db.execSQL("INSERT INTO Raza (IdEspecie, NombreRaza) VALUES ((SELECT IdEspecie FROM Especie WHERE NombreEspecie = 'Perro'), 'No especificado')")
 
+        // Razas de gato
         db.execSQL("INSERT INTO Raza (IdEspecie, NombreRaza) VALUES ((SELECT IdEspecie FROM Especie WHERE NombreEspecie = 'Gato'), 'Persa')")
         db.execSQL("INSERT INTO Raza (IdEspecie, NombreRaza) VALUES ((SELECT IdEspecie FROM Especie WHERE NombreEspecie = 'Gato'), 'Siamés')")
         db.execSQL("INSERT INTO Raza (IdEspecie, NombreRaza) VALUES ((SELECT IdEspecie FROM Especie WHERE NombreEspecie = 'Gato'), 'Maine Coon')")
         db.execSQL("INSERT INTO Raza (IdEspecie, NombreRaza) VALUES ((SELECT IdEspecie FROM Especie WHERE NombreEspecie = 'Gato'), 'Bengalí')")
         db.execSQL("INSERT INTO Raza (IdEspecie, NombreRaza) VALUES ((SELECT IdEspecie FROM Especie WHERE NombreEspecie = 'Gato'), 'Esfinge')")
+        db.execSQL("INSERT INTO Raza (IdEspecie, NombreRaza) VALUES ((SELECT IdEspecie FROM Especie WHERE NombreEspecie = 'Gato'), 'Mixto')")
+        db.execSQL("INSERT INTO Raza (IdEspecie, NombreRaza) VALUES ((SELECT IdEspecie FROM Especie WHERE NombreEspecie = 'Gato'), 'No especificado')")
 
+        // Razas de ave
         db.execSQL("INSERT INTO Raza (IdEspecie, NombreRaza) VALUES ((SELECT IdEspecie FROM Especie WHERE NombreEspecie = 'Ave'), 'Periquito')")
         db.execSQL("INSERT INTO Raza (IdEspecie, NombreRaza) VALUES ((SELECT IdEspecie FROM Especie WHERE NombreEspecie = 'Ave'), 'Canario')")
         db.execSQL("INSERT INTO Raza (IdEspecie, NombreRaza) VALUES ((SELECT IdEspecie FROM Especie WHERE NombreEspecie = 'Ave'), 'Loro')")
         db.execSQL("INSERT INTO Raza (IdEspecie, NombreRaza) VALUES ((SELECT IdEspecie FROM Especie WHERE NombreEspecie = 'Ave'), 'Cacatúa')")
+        db.execSQL("INSERT INTO Raza (IdEspecie, NombreRaza) VALUES ((SELECT IdEspecie FROM Especie WHERE NombreEspecie = 'Ave'), 'Mixto')")
+        db.execSQL("INSERT INTO Raza (IdEspecie, NombreRaza) VALUES ((SELECT IdEspecie FROM Especie WHERE NombreEspecie = 'Ave'), 'No especificado')")
 
+        // Razas de conejo
         db.execSQL("INSERT INTO Raza (IdEspecie, NombreRaza) VALUES ((SELECT IdEspecie FROM Especie WHERE NombreEspecie = 'Conejo'), 'Cabeza de León')")
         db.execSQL("INSERT INTO Raza (IdEspecie, NombreRaza) VALUES ((SELECT IdEspecie FROM Especie WHERE NombreEspecie = 'Conejo'), 'Rex')")
         db.execSQL("INSERT INTO Raza (IdEspecie, NombreRaza) VALUES ((SELECT IdEspecie FROM Especie WHERE NombreEspecie = 'Conejo'), 'Enano Holandés')")
+        db.execSQL("INSERT INTO Raza (IdEspecie, NombreRaza) VALUES ((SELECT IdEspecie FROM Especie WHERE NombreEspecie = 'Conejo'), 'Mixto')")
+        db.execSQL("INSERT INTO Raza (IdEspecie, NombreRaza) VALUES ((SELECT IdEspecie FROM Especie WHERE NombreEspecie = 'Conejo'), 'No especificado')")
 
         // Tabla: Mascota (Debe tener dueño, especie y raza)
         db.execSQL("""
             CREATE TABLE IF NOT EXISTS Mascota (
                 IdMascota INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                FirestoreId TEXT UNIQUE,
                 IdUsuario INTEGER NOT NULL,
                 Nombres TEXT NOT NULL,
                 FechaNacimiento DATE,
-                IdEspecie INTEGER NOT NULL,
-                IdRaza INTEGER,
+                IdEspecie TEXT NOT NULL,
+                IdRaza TEXT NOT NULL,
                 Sexo TEXT,
-                PesoActual DECIMAL,
+                PesoActual DECIMAL(5,2),
                 EsEsterilizado BOOLEAN,
                 TieneChip BOOLEAN,
                 Notas TEXT,
                 Activo BOOLEAN DEFAULT TRUE,
-
+        
                 CONSTRAINT fk_mascota_usuario
                     FOREIGN KEY (IdUsuario)
                     REFERENCES Usuario(IdUsuario)
                     ON DELETE CASCADE
                     ON UPDATE CASCADE,
-
+        
                 CONSTRAINT fk_mascota_especie
                     FOREIGN KEY (IdEspecie)
                     REFERENCES Especie(IdEspecie)
                     ON DELETE RESTRICT
                     ON UPDATE CASCADE,
-
+        
                 CONSTRAINT fk_mascota_raza
                     FOREIGN KEY (IdRaza)
                     REFERENCES Raza(IdRaza)
-                    ON DELETE SET NULL
+                    ON DELETE RESTRICT
                     ON UPDATE CASCADE
             )
         """.trimIndent())
@@ -125,7 +140,6 @@ class AppDatabaseHelper(context : Context) : SQLiteOpenHelper(context, "mypet.db
         db.execSQL("""
             CREATE TABLE IF NOT EXISTS Recordatorio (
                 IdRecordatorio INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-                IdUsuario INTEGER NOT NULL,
                 IdMascota INTEGER NOT NULL,
                 Titulo TEXT NOT NULL,
                 Descripcion TEXT,
@@ -136,12 +150,6 @@ class AppDatabaseHelper(context : Context) : SQLiteOpenHelper(context, "mypet.db
                 Frecuencia TEXT,
                 FechaCreacion DATETIME DEFAULT CURRENT_TIMESTAMP,
                 Activo BOOLEAN DEFAULT TRUE,
-
-                CONSTRAINT fk_recordatorio_usuario
-                    FOREIGN KEY (IdUsuario)
-                    REFERENCES Usuario(IdUsuario)
-                    ON DELETE CASCADE
-                    ON UPDATE CASCADE,
 
                 CONSTRAINT fk_recordatorio_mascota
                     FOREIGN KEY (IdMascota)
@@ -157,14 +165,14 @@ class AppDatabaseHelper(context : Context) : SQLiteOpenHelper(context, "mypet.db
             )
         """.trimIndent())
 
-        // Tabla: HistorialRecordatorio
+        // Tabla: Historial_Recordatorio
         db.execSQL("""
             CREATE TABLE IF NOT EXISTS Historial_Recordatorio (
                 IdHistorial INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
                 IdRecordatorio INTEGER NOT NULL,
-                FechaInicio DATE NOT NULL,
-                FechaFin DATE,
-                FechaCompletado DATE,
+                FechaInicio TEXT NOT NULL,
+                FechaFin TEXT,
+                FechaCompletado TEXT,
                 Notas TEXT,
                 Estado TEXT,
 

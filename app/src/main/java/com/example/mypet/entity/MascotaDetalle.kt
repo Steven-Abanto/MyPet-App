@@ -2,6 +2,7 @@ package com.example.mypet.entity
 
 data class MascotaDetalle(
     val idMascota: Int,
+    val firestoreId: String?,
     val idUsuario: Int,
     val nombres: String,
     val fechaNacimiento: String,

@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.mypet.firebase.AuthHelper
+import com.example.mypet.repository.UsuarioFirestoreRepository
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 
@@ -35,7 +36,7 @@ class MainActivity : AppCompatActivity() {
         btnRegister = findViewById(R.id.btnRegister)
         tvRecoverPassword = findViewById(R.id.tvRecoverPassword)
 
-        btnLogin.setOnClickListener{
+        btnLogin.setOnClickListener {
             val email = etEmail.text.toString().trim()
             val password = etPassword.text.toString().trim()
 
@@ -55,34 +56,30 @@ class MainActivity : AppCompatActivity() {
                 tilPassword.error = null
             }
 
-            if (isValid) {
-                AuthHelper.auth.signInWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(this) { task ->
-                        if (task.isSuccessful) {
-                            val firebaseUser = AuthHelper.auth.currentUser
-
-                            val sharedPreferences = getSharedPreferences("mypet_session", MODE_PRIVATE)
-                            sharedPreferences.edit()
-                                .putString("firebaseUid", firebaseUser?.uid)
-                                .putString("email", firebaseUser?.email)
-                                .apply()
-
-                            Toast.makeText(this, "Inicio de sesión exitoso", Toast.LENGTH_SHORT).show()
-
-                            val intent = Intent(this@MainActivity, HomeActivity::class.java)
-                            startActivity(intent)
-                            finish()
-                        } else {
-                            Toast.makeText(
-                                this@MainActivity,
-                                task.exception?.message ?: "Correo o contraseña incorrectos",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
-                    }
-            } else {
+            if (!isValid) {
                 Toast.makeText(this, "Por favor, completa todos los campos", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
             }
+
+            AuthHelper.auth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this) { task ->
+                    if (task.isSuccessful) {
+                        val firebaseUser = AuthHelper.auth.currentUser
+
+                        if (firebaseUser == null) {
+                            Toast.makeText(this, "No se pudo obtener el usuario autenticado", Toast.LENGTH_SHORT).show()
+                            return@addOnCompleteListener
+                        }
+
+                        sincronizarUsuarioYNavegar(firebaseUser.uid)
+                    } else {
+                        Toast.makeText(
+                            this@MainActivity,
+                            task.exception?.message ?: "Correo o contraseña incorrectos",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
         }
 
         btnRegister.setOnClickListener {
@@ -107,9 +104,38 @@ class MainActivity : AppCompatActivity() {
 
         val currentUser = AuthHelper.auth.currentUser
         if (currentUser != null) {
-            val intent = Intent(this, HomeActivity::class.java)
-            startActivity(intent)
-            finish()
+            sincronizarUsuarioYNavegar(currentUser.uid)
+        }
+    }
+
+    private fun sincronizarUsuarioYNavegar(firebaseUid: String) {
+        val usuarioRepository = UsuarioFirestoreRepository()
+
+        usuarioRepository.sincronizarUsuarioALocal(this, firebaseUid) { okUsuario, errorUsuario ->
+            runOnUiThread {
+                if (!okUsuario) {
+                    Toast.makeText(
+                        this,
+                        "Sesión iniciada, pero no se pudo sincronizar el usuario: $errorUsuario",
+                        Toast.LENGTH_LONG
+                    ).show()
+                    return@runOnUiThread
+                }
+
+                val firebaseUser = AuthHelper.auth.currentUser
+
+                val sharedPreferences = getSharedPreferences("mypet_session", MODE_PRIVATE)
+                sharedPreferences.edit()
+                    .putString("firebaseUid", firebaseUser?.uid)
+                    .putString("email", firebaseUser?.email)
+                    .apply()
+
+                Toast.makeText(this, "Inicio de sesión exitoso", Toast.LENGTH_SHORT).show()
+
+                val intent = Intent(this@MainActivity, HomeActivity::class.java)
+                startActivity(intent)
+                finish()
+            }
         }
     }
 }

@@ -10,7 +10,5 @@ data class Usuario(
     val telefono: String,
     val fechaNacimiento: String,
     val pronombre: String,
-//    val contrasenaHashed: String,
-//    val fechaCreacion: String,
     val activo: Boolean
 )

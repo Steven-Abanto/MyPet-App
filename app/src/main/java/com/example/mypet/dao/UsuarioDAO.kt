@@ -20,8 +20,6 @@ class UsuarioDAO(context: Context) {
             put("Telefono", usuario.telefono)
             put("FechaNacimiento", usuario.fechaNacimiento)
             put("Pronombre", usuario.pronombre)
-//            put("ContrasenaHashed", usuario.contrasenaHashed)
-//            put("FechaCreacion", usuario.fechaCreacion)
             put("Activo", if (usuario.activo) 1 else 0)
         }
         val result = db.insert("Usuario", null, values)
@@ -40,8 +38,6 @@ class UsuarioDAO(context: Context) {
             put("Telefono", usuario.telefono)
             put("FechaNacimiento", usuario.fechaNacimiento)
             put("Pronombre", usuario.pronombre)
-//            put("ContrasenaHashed", usuario.contrasenaHashed)
-//            put("FechaCreacion", usuario.fechaCreacion)
             put("Activo", if (usuario.activo) 1 else 0)
         }
 
@@ -76,8 +72,6 @@ class UsuarioDAO(context: Context) {
                 telefono = cursor.getString(cursor.getColumnIndexOrThrow("Telefono")) ?: "",
                 fechaNacimiento = cursor.getString(cursor.getColumnIndexOrThrow("FechaNacimiento")) ?: "",
                 pronombre = cursor.getString(cursor.getColumnIndexOrThrow("Pronombre")) ?: "",
-//                contrasenaHashed = cursor.getString(cursor.getColumnIndexOrThrow("ContrasenaHashed")) ?: "",
-//                fechaCreacion = cursor.getString(cursor.getColumnIndexOrThrow("FechaCreacion")) ?: "",
                 activo = cursor.getInt(cursor.getColumnIndexOrThrow("Activo")) == 1
             )
         }
@@ -107,8 +101,6 @@ class UsuarioDAO(context: Context) {
                 telefono = cursor.getString(cursor.getColumnIndexOrThrow("Telefono")) ?: "",
                 fechaNacimiento = cursor.getString(cursor.getColumnIndexOrThrow("FechaNacimiento")) ?: "",
                 pronombre = cursor.getString(cursor.getColumnIndexOrThrow("Pronombre")) ?: "",
-//                contrasenaHashed = cursor.getString(cursor.getColumnIndexOrThrow("ContrasenaHashed")) ?: "",
-//                fechaCreacion = cursor.getString(cursor.getColumnIndexOrThrow("FechaCreacion")) ?: "",
                 activo = cursor.getInt(cursor.getColumnIndexOrThrow("Activo")) == 1
             )
         }

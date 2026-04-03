@@ -15,6 +15,7 @@ class MascotaDAO(context : Context) {
         val db = dbHelper.writableDatabase
         val values = ContentValues().apply {
             put("IdUsuario", mascota.idUsuario)
+            put("FirestoreId", mascota.firestoreId)
             put("Nombres", mascota.nombres)
             put("FechaNacimiento", mascota.fechaNacimiento)
             put("IdEspecie", mascota.idEspecie)
@@ -41,6 +42,7 @@ class MascotaDAO(context : Context) {
             mascota.add(
                 Mascota(
                     idMascota = cursor.getInt(cursor.getColumnIndexOrThrow("IdMascota")),
+                    firestoreId = cursor.getString(cursor.getColumnIndexOrThrow("FirestoreId")),
                     idUsuario = cursor.getInt(cursor.getColumnIndexOrThrow("IdUsuario")),
                     nombres = cursor.getString(cursor.getColumnIndexOrThrow("Nombres")),
                     fechaNacimiento = cursor.getString(cursor.getColumnIndexOrThrow("FechaNacimiento")),
@@ -71,6 +73,7 @@ class MascotaDAO(context : Context) {
             mascota.add(
                 Mascota(
                     idMascota = cursor.getInt(cursor.getColumnIndexOrThrow("IdMascota")),
+                    firestoreId = cursor.getString(cursor.getColumnIndexOrThrow("FirestoreId")),
                     idUsuario = cursor.getInt(cursor.getColumnIndexOrThrow("IdUsuario")),
                     nombres = cursor.getString(cursor.getColumnIndexOrThrow("Nombres")),
                     fechaNacimiento = cursor.getString(cursor.getColumnIndexOrThrow("FechaNacimiento")),
@@ -95,7 +98,7 @@ class MascotaDAO(context : Context) {
         val lista = mutableListOf<MascotaDetalle>()
 
         val query = """
-        SELECT m.IdMascota, m.IdUsuario, m.Nombres, m.FechaNacimiento,
+        SELECT m.IdMascota, m.FirestoreId, m.IdUsuario, m.Nombres, m.FechaNacimiento,
                m.IdEspecie, e.NombreEspecie,
                m.IdRaza, r.NombreRaza,
                m.Sexo, m.PesoActual, m.EsEsterilizado, m.TieneChip,
@@ -112,6 +115,7 @@ class MascotaDAO(context : Context) {
             lista.add(
                 MascotaDetalle(
                     idMascota = cursor.getInt(cursor.getColumnIndexOrThrow("IdMascota")),
+                    firestoreId = cursor.getString(cursor.getColumnIndexOrThrow("FirestoreId")),
                     idUsuario = cursor.getInt(cursor.getColumnIndexOrThrow("IdUsuario")),
                     nombres = cursor.getString(cursor.getColumnIndexOrThrow("Nombres")),
                     fechaNacimiento = cursor.getString(cursor.getColumnIndexOrThrow("FechaNacimiento")),
