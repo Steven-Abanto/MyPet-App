@@ -74,6 +74,9 @@ class HomeActivity : AppCompatActivity() {
             return
         }
 
+        android.util.Log.d("PET_DEBUG", "firebaseUid actual=$firebaseUid")
+        android.util.Log.d("PET_DEBUG", "usuarioLocal.idUsuario=${usuarioLocal.idUsuario}")
+
         val mascotasConDetalle = mascotaDAO.obtenerMascotasConDetalle(usuarioLocal.idUsuario)
         petAdapter = PetAdapter(mascotasConDetalle)
         rvPets.adapter = petAdapter

@@ -29,6 +29,7 @@ class UsuarioDAO(context: Context) {
 
     fun guardarOActualizar(usuario: Usuario): Long {
         val db = dbHelper.writableDatabase
+
         val values = ContentValues().apply {
             put("FirebaseUid", usuario.firebaseUid)
             put("Nombres", usuario.nombres)
@@ -41,13 +42,29 @@ class UsuarioDAO(context: Context) {
             put("Activo", if (usuario.activo) 1 else 0)
         }
 
-        val result = db.insertWithOnConflict(
-            "Usuario",
-            null,
-            values,
-            SQLiteDatabase.CONFLICT_REPLACE
+        val cursor = db.rawQuery(
+            "SELECT IdUsuario FROM Usuario WHERE FirebaseUid = ? LIMIT 1",
+            arrayOf(usuario.firebaseUid)
         )
 
+        val result: Long
+
+        if (cursor.moveToFirst()) {
+            val idUsuarioExistente = cursor.getInt(cursor.getColumnIndexOrThrow("IdUsuario"))
+
+            db.update(
+                "Usuario",
+                values,
+                "IdUsuario = ?",
+                arrayOf(idUsuarioExistente.toString())
+            )
+
+            result = idUsuarioExistente.toLong()
+        } else {
+            result = db.insert("Usuario", null, values)
+        }
+
+        cursor.close()
         db.close()
         return result
     }
@@ -55,7 +72,7 @@ class UsuarioDAO(context: Context) {
     fun obtenerPorFirebaseUid(firebaseUid: String): Usuario? {
         val db = dbHelper.readableDatabase
         val cursor: Cursor = db.rawQuery(
-            "SELECT * FROM Usuario WHERE FirebaseUid = ? LIMIT 1",
+            "SELECT * FROM Usuario WHERE FirebaseUid = ? ORDER BY IdUsuario ASC LIMIT 1",
             arrayOf(firebaseUid)
         )
 

@@ -191,6 +191,10 @@ class RegisterPetActivity : AppCompatActivity() {
 
             btnRegistrar.isEnabled = false
 
+            android.util.Log.d("PET_DEBUG", "firebaseUid=$firebaseUid")
+            android.util.Log.d("PET_DEBUG", "idUsuarioLocal=$idUsuarioLocal")
+            android.util.Log.d("PET_DEBUG", "mascotaLocal.idUsuario=${mascotaLocal.idUsuario}")
+
             mascotaRepo.registrarMascota(
                 idUsuarioLocal = idUsuarioLocal,
                 mascotaFirestore = mascotaFirestore,
