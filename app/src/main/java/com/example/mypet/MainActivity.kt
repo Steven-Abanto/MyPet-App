@@ -9,7 +9,9 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.mypet.dao.UsuarioDAO
 import com.example.mypet.firebase.AuthHelper
+import com.example.mypet.repository.MascotaFirestoreRepository
 import com.example.mypet.repository.UsuarioFirestoreRepository
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
@@ -61,18 +63,22 @@ class MainActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
+            btnLogin.isEnabled = false
+
             AuthHelper.auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
                         val firebaseUser = AuthHelper.auth.currentUser
 
                         if (firebaseUser == null) {
+                            btnLogin.isEnabled = true
                             Toast.makeText(this, "No se pudo obtener el usuario autenticado", Toast.LENGTH_SHORT).show()
                             return@addOnCompleteListener
                         }
 
-                        sincronizarUsuarioYNavegar(firebaseUser.uid)
+                        sincronizarUsuarioYMascotasYNavegar(firebaseUser.uid)
                     } else {
+                        btnLogin.isEnabled = true
                         Toast.makeText(
                             this@MainActivity,
                             task.exception?.message ?: "Correo o contraseña incorrectos",
@@ -104,16 +110,19 @@ class MainActivity : AppCompatActivity() {
 
         val currentUser = AuthHelper.auth.currentUser
         if (currentUser != null) {
-            sincronizarUsuarioYNavegar(currentUser.uid)
+            sincronizarUsuarioYMascotasYNavegar(currentUser.uid)
         }
     }
 
-    private fun sincronizarUsuarioYNavegar(firebaseUid: String) {
+    private fun sincronizarUsuarioYMascotasYNavegar(firebaseUid: String) {
         val usuarioRepository = UsuarioFirestoreRepository()
+        val usuarioDAO = UsuarioDAO(this)
+        val mascotaRepository = MascotaFirestoreRepository(this)
 
         usuarioRepository.sincronizarUsuarioALocal(this, firebaseUid) { okUsuario, errorUsuario ->
             runOnUiThread {
                 if (!okUsuario) {
+                    btnLogin.isEnabled = true
                     Toast.makeText(
                         this,
                         "Sesión iniciada, pero no se pudo sincronizar el usuario: $errorUsuario",
@@ -122,19 +131,48 @@ class MainActivity : AppCompatActivity() {
                     return@runOnUiThread
                 }
 
-                val firebaseUser = AuthHelper.auth.currentUser
+                val usuarioLocal = usuarioDAO.obtenerPorFirebaseUid(firebaseUid)
+                if (usuarioLocal == null) {
+                    btnLogin.isEnabled = true
+                    Toast.makeText(
+                        this,
+                        "No se encontró el usuario sincronizado en la base local",
+                        Toast.LENGTH_LONG
+                    ).show()
+                    return@runOnUiThread
+                }
 
-                val sharedPreferences = getSharedPreferences("mypet_session", MODE_PRIVATE)
-                sharedPreferences.edit()
-                    .putString("firebaseUid", firebaseUser?.uid)
-                    .putString("email", firebaseUser?.email)
-                    .apply()
+                mascotaRepository.sincronizarMascotasDeUsuarioALocal(
+                    firebaseUid = firebaseUid,
+                    idUsuarioLocal = usuarioLocal.idUsuario
+                ) { okMascotas, errorMascotas ->
+                    runOnUiThread {
+                        btnLogin.isEnabled = true
 
-                Toast.makeText(this, "Inicio de sesión exitoso", Toast.LENGTH_SHORT).show()
+                        if (!okMascotas) {
+                            Toast.makeText(
+                                this,
+                                "Sesión iniciada, pero no se pudo sincronizar las mascotas: $errorMascotas",
+                                Toast.LENGTH_LONG
+                            ).show()
+                            return@runOnUiThread
+                        }
 
-                val intent = Intent(this@MainActivity, HomeActivity::class.java)
-                startActivity(intent)
-                finish()
+                        val firebaseUser = AuthHelper.auth.currentUser
+
+                        val sharedPreferences = getSharedPreferences("mypet_session", MODE_PRIVATE)
+                        sharedPreferences.edit()
+                            .putString("firebaseUid", firebaseUser?.uid)
+                            .putString("email", firebaseUser?.email)
+                            .apply()
+
+                        Toast.makeText(this, "Inicio de sesión exitoso", Toast.LENGTH_SHORT).show()
+
+                        val intent = Intent(this@MainActivity, HomeActivity::class.java)
+                        startActivity(intent)
+                        finish()
+                    }
+                }
             }
         }
     }
