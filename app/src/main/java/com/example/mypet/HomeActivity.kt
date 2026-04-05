@@ -14,6 +14,7 @@ import com.example.mypet.adapter.PetAdapter
 import com.example.mypet.dao.MascotaDAO
 import com.example.mypet.dao.UsuarioDAO
 import com.example.mypet.firebase.AuthHelper
+import com.example.mypet.repository.MascotaFirestoreRepository
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class HomeActivity : AppCompatActivity() {
@@ -22,6 +23,7 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var petAdapter: PetAdapter
     private lateinit var mascotaDAO: MascotaDAO
     private lateinit var usuarioDAO: UsuarioDAO
+    private lateinit var mascotaRepository: MascotaFirestoreRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,11 +32,12 @@ class HomeActivity : AppCompatActivity() {
 
         mascotaDAO = MascotaDAO(this)
         usuarioDAO = UsuarioDAO(this)
+        mascotaRepository = MascotaFirestoreRepository(this)
 
         rvPets = findViewById(R.id.rvPets)
         rvPets.layoutManager = LinearLayoutManager(this)
-
-        cargarMascotas()
+        petAdapter = PetAdapter(emptyList())
+        rvPets.adapter = petAdapter
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -52,35 +55,53 @@ class HomeActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        cargarMascotas()
+        cargarMascotasLocales()
+        sincronizarMascotasYRefrescar()
     }
 
-    private fun cargarMascotas() {
-        val firebaseUid = AuthHelper.auth.currentUser?.uid
-
-        if (firebaseUid.isNullOrEmpty()) {
-            Toast.makeText(this, "No hay usuario autenticado", Toast.LENGTH_SHORT).show()
-            petAdapter = PetAdapter(emptyList())
-            rvPets.adapter = petAdapter
-            return
-        }
-
-        val usuarioLocal = usuarioDAO.obtenerPorFirebaseUid(firebaseUid)
-
-        if (usuarioLocal == null) {
-            Toast.makeText(this, "No se encontró el usuario en la base local", Toast.LENGTH_SHORT).show()
-            petAdapter = PetAdapter(emptyList())
-            rvPets.adapter = petAdapter
-            return
-        }
-
-        android.util.Log.d("PET_DEBUG", "firebaseUid actual=$firebaseUid")
-        android.util.Log.d("PET_DEBUG", "usuarioLocal.idUsuario=${usuarioLocal.idUsuario}")
-
+    private fun cargarMascotasLocales() {
+        val usuarioLocal = obtenerUsuarioActualLocal() ?: return
         val mascotasConDetalle = mascotaDAO.obtenerMascotasConDetalle(usuarioLocal.idUsuario)
         petAdapter = PetAdapter(mascotasConDetalle)
         rvPets.adapter = petAdapter
     }
+
+    private fun sincronizarMascotasYRefrescar() {
+        val firebaseUid = AuthHelper.auth.currentUser?.uid
+
+        if (firebaseUid.isNullOrEmpty()) {
+            Toast.makeText(this, "No hay usuario autenticado", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val usuarioLocal = usuarioDAO.obtenerPorFirebaseUid(firebaseUid)
+        if (usuarioLocal == null) {
+            Toast.makeText(this, "No se encontró el usuario en la base local", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        mascotaRepository.sincronizarMascotasDeUsuarioALocal(
+            firebaseUid = firebaseUid,
+            idUsuarioLocal = usuarioLocal.idUsuario
+        ) { ok, error ->
+            runOnUiThread {
+                if (ok) {
+                    val mascotasActualizadas = mascotaDAO.obtenerMascotasConDetalle(usuarioLocal.idUsuario)
+                    petAdapter = PetAdapter(mascotasActualizadas)
+                    rvPets.adapter = petAdapter
+                } else {
+                    Toast.makeText(
+                        this,
+                        "No se pudo actualizar las mascotas: $error",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        }
+    }
+
+    private fun obtenerUsuarioActualLocal() =
+        AuthHelper.auth.currentUser?.uid?.let { usuarioDAO.obtenerPorFirebaseUid(it) }
 
     private fun setupBottomNavigation() {
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation)

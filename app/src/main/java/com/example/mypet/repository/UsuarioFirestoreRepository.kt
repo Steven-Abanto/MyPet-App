@@ -2,8 +2,8 @@ package com.example.mypet.repository
 
 import android.content.Context
 import com.example.mypet.dao.UsuarioDAO
-import com.example.mypet.entity.Usuario
 import com.example.mypet.entity.firestore.UsuarioFirestore
+import com.example.mypet.entity.mappers.UsuarioMapper
 import com.example.mypet.firebase.FirestoreHelper
 
 class UsuarioFirestoreRepository {
@@ -54,20 +54,7 @@ class UsuarioFirestoreRepository {
 
             try {
                 val usuarioDAO = UsuarioDAO(context)
-
-                val usuarioLocal = Usuario(
-                    idUsuario = 0,
-                    firebaseUid = usuarioFirestore.uid,
-                    nombres = usuarioFirestore.nombres,
-                    apellidoPaterno = usuarioFirestore.apellidoPaterno,
-                    apellidoMaterno = usuarioFirestore.apellidoMaterno,
-                    email = usuarioFirestore.email,
-                    telefono = usuarioFirestore.telefono,
-                    fechaNacimiento = usuarioFirestore.fechaNacimiento,
-                    pronombre = usuarioFirestore.pronombre,
-                    activo = usuarioFirestore.activo
-                )
-
+                val usuarioLocal = UsuarioMapper.toLocal(usuarioFirestore)
                 usuarioDAO.guardarOActualizar(usuarioLocal)
                 onResult(true, null)
             } catch (e: Exception) {

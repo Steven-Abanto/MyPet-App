@@ -4,6 +4,7 @@ import android.content.Context
 import com.example.mypet.dao.MascotaDAO
 import com.example.mypet.entity.Mascota
 import com.example.mypet.entity.firestore.MascotaFirestore
+import com.example.mypet.entity.mappers.MascotaMapper
 import com.example.mypet.firebase.FirestoreHelper
 
 class MascotaFirestoreRepository(private val context: Context) {
@@ -55,20 +56,10 @@ class MascotaFirestoreRepository(private val context: Context) {
                         val mascotaFirestore = doc.toObject(MascotaFirestore::class.java)
 
                         if (mascotaFirestore != null) {
-                            val mascotaLocal = Mascota(
-                                idMascota = 0,
+                            val mascotaLocal = MascotaMapper.toLocal(
                                 firestoreId = doc.id,
-                                idUsuario = idUsuarioLocal,
-                                nombres = mascotaFirestore.nombres,
-                                fechaNacimiento = mascotaFirestore.fechaNacimiento,
-                                idEspecie = mascotaFirestore.idEspecie,
-                                idRaza = mascotaFirestore.idRaza,
-                                sexo = mascotaFirestore.sexo,
-                                pesoActual = mascotaFirestore.pesoActual,
-                                esEsterilizado = mascotaFirestore.esEsterilizado,
-                                tieneChip = mascotaFirestore.tieneChip,
-                                notas = mascotaFirestore.notas,
-                                activo = mascotaFirestore.activo
+                                idUsuarioLocal = idUsuarioLocal,
+                                mascotaFirestore = mascotaFirestore
                             )
 
                             mascotaDAO.guardarOActualizar(mascotaLocal)

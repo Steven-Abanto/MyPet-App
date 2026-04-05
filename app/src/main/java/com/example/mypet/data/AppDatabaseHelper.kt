@@ -126,13 +126,59 @@ class AppDatabaseHelper(context : Context) : SQLiteOpenHelper(context, "mypet.db
             )
         """.trimIndent())
 
+        db.execSQL("""
+            CREATE TABLE IF NOT EXISTS CategoriaRecordatorio (
+                IdCategoriaRecordatorio INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                Nombre TEXT NOT NULL UNIQUE /*Médico, Cuidados Generales, Rutina, etc*/
+            )
+        """.trimIndent())
+
+        db.execSQL("""
+            INSERT INTO CategoriaRecordatorio (Nombre) VALUES
+                ('Personalizado'), /*Siempre debe ser id 1 para evitar problemas*/
+                ('Médico'),
+                ('Cuidados generales'),
+                ('Rutina'),
+                ('Otro');
+        """.trimIndent())
+
         // Tabla: TipoRecordatorio
         db.execSQL("""
             CREATE TABLE IF NOT EXISTS TipoRecordatorio (
                 IdTipoRecordatorio INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-                Nombre TEXT NOT NULL UNIQUE,
-                EsMedico BOOLEAN DEFAULT FALSE
+                IdCategoriaRecordatorio INTEGER NOT NULL,
+                Nombre TEXT NOT NULL, /*Vacunación, Baño, Paseo, etc.*/
+                                
+                CONSTRAINT fk_tipo_categoria
+                    FOREIGN KEY (IdCategoriaRecordatorio)
+                    REFERENCES CategoriaRecordatorio(IdCategoriaRecordatorio)
+                    ON DELETE RESTRICT
+                    ON UPDATE CASCADE,
+                    
+                CONSTRAINT uq_tipo_categoria_nombre
+                    UNIQUE (IdCategoriaRecordatorio, Nombre)
             )
+        """.trimIndent())
+
+        db.execSQL("""
+            INSERT INTO TipoRecordatorio (IdCategoriaRecordatorio, Nombre) VALUES
+                (2, 'Vacunación'),
+                (2, 'Desparasitación'),
+                (2, 'Consulta médica'),
+                (2, 'Medicación'),
+                (2, 'Control de peso'),
+    
+                (3, 'Baño'),
+                (3, 'Corte de uñas'),
+                (3, 'Peluquería'),
+                (3, 'Limpieza dental'),
+    
+                (4, 'Paseo'),
+                (4, 'Alimentación especial'),
+                (4, 'Ejercicio'),
+                (4, 'Entrenamiento'),
+    
+                (5, 'Otro');
         """.trimIndent())
 
         // Tabla: Recordatorio (depende de un tipo de recordatorio,
@@ -140,15 +186,16 @@ class AppDatabaseHelper(context : Context) : SQLiteOpenHelper(context, "mypet.db
         db.execSQL("""
             CREATE TABLE IF NOT EXISTS Recordatorio (
                 IdRecordatorio INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                FirestoreId TEXT,
                 IdMascota INTEGER NOT NULL,
                 Titulo TEXT NOT NULL,
                 Descripcion TEXT,
                 IdTipoRecordatorio INTEGER NOT NULL,
                 FechaInicio DATE NOT NULL,
                 FechaFin DATE,
-                SeRepite BOOLEAN DEFAULT FALSE,
-                Frecuencia TEXT,
+                Frecuencia TEXT NOT NULL CHECK(Frecuencia IN ('UNA_VEZ','DIARIO','SEMANAL','MENSUAL','ANUAL')),
                 FechaCreacion DATETIME DEFAULT CURRENT_TIMESTAMP,
+                UltimaModificacion DATETIME DEFAULT CURRENT_TIMESTAMP,
                 Activo BOOLEAN DEFAULT TRUE,
 
                 CONSTRAINT fk_recordatorio_mascota
@@ -169,13 +216,16 @@ class AppDatabaseHelper(context : Context) : SQLiteOpenHelper(context, "mypet.db
         db.execSQL("""
             CREATE TABLE IF NOT EXISTS Historial_Recordatorio (
                 IdHistorial INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                FirestoreId TEXT,
                 IdRecordatorio INTEGER NOT NULL,
-                FechaInicio TEXT NOT NULL,
-                FechaFin TEXT,
+                FechaProgramada DATE NOT NULL,
                 FechaCompletado TEXT,
                 Notas TEXT,
-                Estado TEXT,
-
+                Estado TEXT NOT NULL CHECK(Estado IN ('PENDIENTE', 'COMPLETADO', 'OMITIDO', 'VENCIDO', 'CANCELADO')),
+                FechaCreacion DATETIME DEFAULT CURRENT_TIMESTAMP,
+                UltimaModificacion DATETIME DEFAULT CURRENT_TIMESTAMP,
+                Activo BOOLEAN DEFAULT TRUE,
+            
                 CONSTRAINT fk_historial_recordatorio
                     FOREIGN KEY (IdRecordatorio)
                     REFERENCES Recordatorio(IdRecordatorio)
