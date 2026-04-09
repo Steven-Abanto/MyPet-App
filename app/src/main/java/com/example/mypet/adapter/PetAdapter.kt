@@ -3,12 +3,11 @@ package com.example.mypet.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.lottie.LottieAnimationView
 import com.example.mypet.R
-import com.example.mypet.entity.MascotaDetalle
+import com.example.mypet.entity.mappers.MascotaDetalle
 
 class PetAdapter (private val mascotaList: List<MascotaDetalle>) : RecyclerView.Adapter<PetAdapter.PetViewHolder>() {
 

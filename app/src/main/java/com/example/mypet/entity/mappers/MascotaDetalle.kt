@@ -1,4 +1,4 @@
-package com.example.mypet.entity
+package com.example.mypet.entity.mappers
 
 data class MascotaDetalle(
     val idMascota: Int,

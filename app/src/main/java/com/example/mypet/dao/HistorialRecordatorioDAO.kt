@@ -91,18 +91,7 @@ class HistorialRecordatorioDAO(context: Context) {
         var historial: HistorialRecordatorio? = null
 
         if (cursor.moveToFirst()) {
-            historial = HistorialRecordatorio(
-                idHistorial = cursor.getInt(cursor.getColumnIndexOrThrow("IdHistorial")),
-                firestoreId = cursor.getString(cursor.getColumnIndexOrThrow("FirestoreId")),
-                idRecordatorio = cursor.getInt(cursor.getColumnIndexOrThrow("IdRecordatorio")),
-                fechaProgramada = cursor.getString(cursor.getColumnIndexOrThrow("FechaProgramada")),
-                fechaCompletado = cursor.getString(cursor.getColumnIndexOrThrow("FechaCompletado")),
-                notas = cursor.getString(cursor.getColumnIndexOrThrow("Notas")),
-                estado = cursor.getString(cursor.getColumnIndexOrThrow("Estado")),
-                fechaCreacion = cursor.getString(cursor.getColumnIndexOrThrow("FechaCreacion")),
-                ultimaModificacion = cursor.getString(cursor.getColumnIndexOrThrow("UltimaModificacion")),
-                activo = cursor.getInt(cursor.getColumnIndexOrThrow("Activo")) == 1
-            )
+            historial = cursorToHistorial(cursor)
         }
 
         cursor.close()
@@ -119,20 +108,7 @@ class HistorialRecordatorioDAO(context: Context) {
         )
 
         while (cursor.moveToNext()) {
-            lista.add(
-                HistorialRecordatorio(
-                    idHistorial = cursor.getInt(cursor.getColumnIndexOrThrow("IdHistorial")),
-                    firestoreId = cursor.getString(cursor.getColumnIndexOrThrow("FirestoreId")),
-                    idRecordatorio = cursor.getInt(cursor.getColumnIndexOrThrow("IdRecordatorio")),
-                    fechaProgramada = cursor.getString(cursor.getColumnIndexOrThrow("FechaProgramada")),
-                    fechaCompletado = cursor.getString(cursor.getColumnIndexOrThrow("FechaCompletado")),
-                    notas = cursor.getString(cursor.getColumnIndexOrThrow("Notas")),
-                    estado = cursor.getString(cursor.getColumnIndexOrThrow("Estado")),
-                    fechaCreacion = cursor.getString(cursor.getColumnIndexOrThrow("FechaCreacion")),
-                    ultimaModificacion = cursor.getString(cursor.getColumnIndexOrThrow("UltimaModificacion")),
-                    activo = cursor.getInt(cursor.getColumnIndexOrThrow("Activo")) == 1
-                )
-            )
+            lista.add(cursorToHistorial(cursor))
         }
 
         cursor.close()
@@ -155,25 +131,27 @@ class HistorialRecordatorioDAO(context: Context) {
         val cursor: Cursor = db.rawQuery(query, arrayOf(idMascota.toString()))
 
         while (cursor.moveToNext()) {
-            lista.add(
-                HistorialRecordatorio(
-                    idHistorial = cursor.getInt(cursor.getColumnIndexOrThrow("IdHistorial")),
-                    firestoreId = cursor.getString(cursor.getColumnIndexOrThrow("FirestoreId")),
-                    idRecordatorio = cursor.getInt(cursor.getColumnIndexOrThrow("IdRecordatorio")),
-                    fechaProgramada = cursor.getString(cursor.getColumnIndexOrThrow("FechaProgramada")),
-                    fechaCompletado = cursor.getString(cursor.getColumnIndexOrThrow("FechaCompletado")),
-                    notas = cursor.getString(cursor.getColumnIndexOrThrow("Notas")),
-                    estado = cursor.getString(cursor.getColumnIndexOrThrow("Estado")),
-                    fechaCreacion = cursor.getString(cursor.getColumnIndexOrThrow("FechaCreacion")),
-                    ultimaModificacion = cursor.getString(cursor.getColumnIndexOrThrow("UltimaModificacion")),
-                    activo = cursor.getInt(cursor.getColumnIndexOrThrow("Activo")) == 1
-                )
-            )
+            lista.add(cursorToHistorial(cursor))
         }
 
         cursor.close()
         db.close()
         return lista
+    }
+
+    private fun cursorToHistorial(cursor: Cursor): HistorialRecordatorio {
+        return HistorialRecordatorio(
+            idHistorial = cursor.getInt(cursor.getColumnIndexOrThrow("IdHistorial")),
+            firestoreId = cursor.getString(cursor.getColumnIndexOrThrow("FirestoreId")),
+            idRecordatorio = cursor.getInt(cursor.getColumnIndexOrThrow("IdRecordatorio")),
+            fechaProgramada = cursor.getString(cursor.getColumnIndexOrThrow("FechaProgramada")),
+            fechaCompletado = cursor.getString(cursor.getColumnIndexOrThrow("FechaCompletado")),
+            notas = cursor.getString(cursor.getColumnIndexOrThrow("Notas")),
+            estado = cursor.getString(cursor.getColumnIndexOrThrow("Estado")),
+            fechaCreacion = cursor.getString(cursor.getColumnIndexOrThrow("FechaCreacion")),
+            ultimaModificacion = cursor.getString(cursor.getColumnIndexOrThrow("UltimaModificacion")),
+            activo = cursor.getInt(cursor.getColumnIndexOrThrow("Activo")) == 1
+        )
     }
 
     private fun getNow(): String {

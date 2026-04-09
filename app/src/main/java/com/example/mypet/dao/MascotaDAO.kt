@@ -3,10 +3,9 @@ package com.example.mypet.dao
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
-import android.database.sqlite.SQLiteDatabase
 import com.example.idatdemo.data.AppDatabaseHelper
 import com.example.mypet.entity.Mascota
-import com.example.mypet.entity.MascotaDetalle
+import com.example.mypet.entity.mappers.MascotaDetalle
 
 class MascotaDAO(context: Context) {
     private val dbHelper = AppDatabaseHelper(context)
@@ -85,6 +84,38 @@ class MascotaDAO(context: Context) {
         val cursor = db.rawQuery(
             "SELECT * FROM Mascota WHERE FirestoreId = ? LIMIT 1",
             arrayOf(firestoreId)
+        )
+
+        var mascota: Mascota? = null
+
+        if (cursor.moveToFirst()) {
+            mascota = Mascota(
+                idMascota = cursor.getInt(cursor.getColumnIndexOrThrow("IdMascota")),
+                firestoreId = cursor.getString(cursor.getColumnIndexOrThrow("FirestoreId")),
+                idUsuario = cursor.getInt(cursor.getColumnIndexOrThrow("IdUsuario")),
+                nombres = cursor.getString(cursor.getColumnIndexOrThrow("Nombres")),
+                fechaNacimiento = cursor.getString(cursor.getColumnIndexOrThrow("FechaNacimiento")),
+                idEspecie = cursor.getInt(cursor.getColumnIndexOrThrow("IdEspecie")),
+                idRaza = cursor.getInt(cursor.getColumnIndexOrThrow("IdRaza")),
+                sexo = cursor.getString(cursor.getColumnIndexOrThrow("Sexo")),
+                pesoActual = cursor.getString(cursor.getColumnIndexOrThrow("PesoActual")),
+                esEsterilizado = cursor.getInt(cursor.getColumnIndexOrThrow("EsEsterilizado")) == 1,
+                tieneChip = cursor.getInt(cursor.getColumnIndexOrThrow("TieneChip")) == 1,
+                notas = cursor.getString(cursor.getColumnIndexOrThrow("Notas")),
+                activo = cursor.getInt(cursor.getColumnIndexOrThrow("Activo")) == 1
+            )
+        }
+
+        cursor.close()
+        db.close()
+        return mascota
+    }
+
+    fun obtenerPorId(idMascota: Int): Mascota? {
+        val db = dbHelper.readableDatabase
+        val cursor = db.rawQuery(
+            "SELECT * FROM Mascota WHERE IdMascota = ? LIMIT 1",
+            arrayOf(idMascota.toString())
         )
 
         var mascota: Mascota? = null

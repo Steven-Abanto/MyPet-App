@@ -5,6 +5,7 @@ import android.content.Context
 import android.database.Cursor
 import com.example.idatdemo.data.AppDatabaseHelper
 import com.example.mypet.entity.Recordatorio
+import com.example.mypet.entity.mappers.RecordatorioDetalle
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -26,7 +27,7 @@ class RecordatorioDAO(context: Context) {
             put("IdTipoRecordatorio", recordatorio.idTipoRecordatorio)
             put("FechaInicio", recordatorio.fechaInicio)
             put("FechaFin", recordatorio.fechaFin)
-            put("Frecuencia", recordatorio.frecuencia)
+            put("Frecuencia", recordatorio.frecuencia ?: "UNA_VEZ")
             put("FechaCreacion", recordatorio.fechaCreacion ?: now)
             put("UltimaModificacion", recordatorio.ultimaModificacion ?: now)
             put("Activo", if (recordatorio.activo) 1 else 0)
@@ -49,7 +50,7 @@ class RecordatorioDAO(context: Context) {
             put("IdTipoRecordatorio", recordatorio.idTipoRecordatorio)
             put("FechaInicio", recordatorio.fechaInicio)
             put("FechaFin", recordatorio.fechaFin)
-            put("Frecuencia", recordatorio.frecuencia)
+            put("Frecuencia", recordatorio.frecuencia ?: "UNA_VEZ")
             put("FechaCreacion", recordatorio.fechaCreacion ?: now)
             put("UltimaModificacion", now)
             put("Activo", if (recordatorio.activo) 1 else 0)
@@ -95,20 +96,7 @@ class RecordatorioDAO(context: Context) {
         var recordatorio: Recordatorio? = null
 
         if (cursor.moveToFirst()) {
-            recordatorio = Recordatorio(
-                idRecordatorio = cursor.getInt(cursor.getColumnIndexOrThrow("IdRecordatorio")),
-                firestoreId = cursor.getString(cursor.getColumnIndexOrThrow("FirestoreId")),
-                idMascota = cursor.getInt(cursor.getColumnIndexOrThrow("IdMascota")),
-                titulo = cursor.getString(cursor.getColumnIndexOrThrow("Titulo")),
-                descripcion = cursor.getString(cursor.getColumnIndexOrThrow("Descripcion")),
-                idTipoRecordatorio = cursor.getInt(cursor.getColumnIndexOrThrow("IdTipoRecordatorio")),
-                fechaInicio = cursor.getString(cursor.getColumnIndexOrThrow("FechaInicio")),
-                fechaFin = cursor.getString(cursor.getColumnIndexOrThrow("FechaFin")),
-                frecuencia = cursor.getString(cursor.getColumnIndexOrThrow("Frecuencia")),
-                fechaCreacion = cursor.getString(cursor.getColumnIndexOrThrow("FechaCreacion")),
-                ultimaModificacion = cursor.getString(cursor.getColumnIndexOrThrow("UltimaModificacion")),
-                activo = cursor.getInt(cursor.getColumnIndexOrThrow("Activo")) == 1
-            )
+            recordatorio = cursorToRecordatorio(cursor)
         }
 
         cursor.close()
@@ -126,20 +114,7 @@ class RecordatorioDAO(context: Context) {
         var recordatorio: Recordatorio? = null
 
         if (cursor.moveToFirst()) {
-            recordatorio = Recordatorio(
-                idRecordatorio = cursor.getInt(cursor.getColumnIndexOrThrow("IdRecordatorio")),
-                firestoreId = cursor.getString(cursor.getColumnIndexOrThrow("FirestoreId")),
-                idMascota = cursor.getInt(cursor.getColumnIndexOrThrow("IdMascota")),
-                titulo = cursor.getString(cursor.getColumnIndexOrThrow("Titulo")),
-                descripcion = cursor.getString(cursor.getColumnIndexOrThrow("Descripcion")),
-                idTipoRecordatorio = cursor.getInt(cursor.getColumnIndexOrThrow("IdTipoRecordatorio")),
-                fechaInicio = cursor.getString(cursor.getColumnIndexOrThrow("FechaInicio")),
-                fechaFin = cursor.getString(cursor.getColumnIndexOrThrow("FechaFin")),
-                frecuencia = cursor.getString(cursor.getColumnIndexOrThrow("Frecuencia")),
-                fechaCreacion = cursor.getString(cursor.getColumnIndexOrThrow("FechaCreacion")),
-                ultimaModificacion = cursor.getString(cursor.getColumnIndexOrThrow("UltimaModificacion")),
-                activo = cursor.getInt(cursor.getColumnIndexOrThrow("Activo")) == 1
-            )
+            recordatorio = cursorToRecordatorio(cursor)
         }
 
         cursor.close()
@@ -156,22 +131,7 @@ class RecordatorioDAO(context: Context) {
         )
 
         while (cursor.moveToNext()) {
-            lista.add(
-                Recordatorio(
-                    idRecordatorio = cursor.getInt(cursor.getColumnIndexOrThrow("IdRecordatorio")),
-                    firestoreId = cursor.getString(cursor.getColumnIndexOrThrow("FirestoreId")),
-                    idMascota = cursor.getInt(cursor.getColumnIndexOrThrow("IdMascota")),
-                    titulo = cursor.getString(cursor.getColumnIndexOrThrow("Titulo")),
-                    descripcion = cursor.getString(cursor.getColumnIndexOrThrow("Descripcion")),
-                    idTipoRecordatorio = cursor.getInt(cursor.getColumnIndexOrThrow("IdTipoRecordatorio")),
-                    fechaInicio = cursor.getString(cursor.getColumnIndexOrThrow("FechaInicio")),
-                    fechaFin = cursor.getString(cursor.getColumnIndexOrThrow("FechaFin")),
-                    frecuencia = cursor.getString(cursor.getColumnIndexOrThrow("Frecuencia")),
-                    fechaCreacion = cursor.getString(cursor.getColumnIndexOrThrow("FechaCreacion")),
-                    ultimaModificacion = cursor.getString(cursor.getColumnIndexOrThrow("UltimaModificacion")),
-                    activo = cursor.getInt(cursor.getColumnIndexOrThrow("Activo")) == 1
-                )
-            )
+            lista.add(cursorToRecordatorio(cursor))
         }
 
         cursor.close()
@@ -188,22 +148,7 @@ class RecordatorioDAO(context: Context) {
         )
 
         while (cursor.moveToNext()) {
-            lista.add(
-                Recordatorio(
-                    idRecordatorio = cursor.getInt(cursor.getColumnIndexOrThrow("IdRecordatorio")),
-                    firestoreId = cursor.getString(cursor.getColumnIndexOrThrow("FirestoreId")),
-                    idMascota = cursor.getInt(cursor.getColumnIndexOrThrow("IdMascota")),
-                    titulo = cursor.getString(cursor.getColumnIndexOrThrow("Titulo")),
-                    descripcion = cursor.getString(cursor.getColumnIndexOrThrow("Descripcion")),
-                    idTipoRecordatorio = cursor.getInt(cursor.getColumnIndexOrThrow("IdTipoRecordatorio")),
-                    fechaInicio = cursor.getString(cursor.getColumnIndexOrThrow("FechaInicio")),
-                    fechaFin = cursor.getString(cursor.getColumnIndexOrThrow("FechaFin")),
-                    frecuencia = cursor.getString(cursor.getColumnIndexOrThrow("Frecuencia")),
-                    fechaCreacion = cursor.getString(cursor.getColumnIndexOrThrow("FechaCreacion")),
-                    ultimaModificacion = cursor.getString(cursor.getColumnIndexOrThrow("UltimaModificacion")),
-                    activo = cursor.getInt(cursor.getColumnIndexOrThrow("Activo")) == 1
-                )
-            )
+            lista.add(cursorToRecordatorio(cursor))
         }
 
         cursor.close()
@@ -229,6 +174,100 @@ class RecordatorioDAO(context: Context) {
 
         db.close()
         return result
+    }
+
+    fun obtenerRecordatoriosConDetallePorMascota(idMascota: Int): List<RecordatorioDetalle> {
+        val db = dbHelper.readableDatabase
+        val lista = mutableListOf<RecordatorioDetalle>()
+
+        val query = """
+            SELECT r.IdRecordatorio, r.FirestoreId, r.IdMascota,
+                   m.Nombres AS NombreMascota,
+                   r.Titulo, r.Descripcion,
+                   r.IdTipoRecordatorio,
+                   t.Nombre AS NombreTipoRecordatorio,
+                   r.FechaInicio, r.FechaFin, r.Frecuencia,
+                   r.Activo
+            FROM Recordatorio r
+            INNER JOIN Mascota m ON r.IdMascota = m.IdMascota
+            INNER JOIN TipoRecordatorio t ON r.IdTipoRecordatorio = t.IdTipoRecordatorio
+            WHERE r.IdMascota = ?
+            ORDER BY r.FechaInicio ASC
+        """.trimIndent()
+
+        val cursor = db.rawQuery(query, arrayOf(idMascota.toString()))
+
+        while (cursor.moveToNext()) {
+            lista.add(cursorToRecordatorioDetalle(cursor))
+        }
+
+        cursor.close()
+        db.close()
+        return lista
+    }
+
+    fun obtenerRecordatoriosPorUsuario(idUsuario: Int): List<RecordatorioDetalle> {
+        val db = dbHelper.readableDatabase
+        val lista = mutableListOf<RecordatorioDetalle>()
+
+        val query = """
+            SELECT r.IdRecordatorio, r.FirestoreId, r.IdMascota,
+                   m.Nombres AS NombreMascota,
+                   r.Titulo, r.Descripcion,
+                   r.IdTipoRecordatorio,
+                   t.Nombre AS NombreTipoRecordatorio,
+                   r.FechaInicio, r.FechaFin, r.Frecuencia,
+                   r.Activo
+            FROM Recordatorio r
+            INNER JOIN Mascota m ON r.IdMascota = m.IdMascota
+            INNER JOIN TipoRecordatorio t ON r.IdTipoRecordatorio = t.IdTipoRecordatorio
+            WHERE m.IdUsuario = ? AND r.Activo = 1
+            ORDER BY r.FechaInicio ASC
+        """.trimIndent()
+
+        val cursor = db.rawQuery(query, arrayOf(idUsuario.toString()))
+
+        while (cursor.moveToNext()) {
+            lista.add(cursorToRecordatorioDetalle(cursor))
+        }
+
+        cursor.close()
+        db.close()
+        return lista
+    }
+
+    private fun cursorToRecordatorio(cursor: Cursor): Recordatorio {
+        return Recordatorio(
+            idRecordatorio = cursor.getInt(cursor.getColumnIndexOrThrow("IdRecordatorio")),
+            firestoreId = cursor.getString(cursor.getColumnIndexOrThrow("FirestoreId")),
+            idMascota = cursor.getInt(cursor.getColumnIndexOrThrow("IdMascota")),
+            titulo = cursor.getString(cursor.getColumnIndexOrThrow("Titulo")),
+            descripcion = cursor.getString(cursor.getColumnIndexOrThrow("Descripcion")),
+            idTipoRecordatorio = cursor.getInt(cursor.getColumnIndexOrThrow("IdTipoRecordatorio")),
+            fechaInicio = cursor.getString(cursor.getColumnIndexOrThrow("FechaInicio")),
+            fechaFin = cursor.getString(cursor.getColumnIndexOrThrow("FechaFin")),
+            frecuencia = cursor.getString(cursor.getColumnIndexOrThrow("Frecuencia")),
+            fechaCreacion = cursor.getString(cursor.getColumnIndexOrThrow("FechaCreacion")),
+            ultimaModificacion = cursor.getString(cursor.getColumnIndexOrThrow("UltimaModificacion")),
+            activo = cursor.getInt(cursor.getColumnIndexOrThrow("Activo")) == 1
+        )
+    }
+
+    private fun cursorToRecordatorioDetalle(cursor: Cursor): RecordatorioDetalle {
+        return RecordatorioDetalle(
+            idRecordatorio = cursor.getInt(cursor.getColumnIndexOrThrow("IdRecordatorio")),
+            firestoreId = cursor.getString(cursor.getColumnIndexOrThrow("FirestoreId")),
+            idMascota = cursor.getInt(cursor.getColumnIndexOrThrow("IdMascota")),
+            nombreMascota = cursor.getString(cursor.getColumnIndexOrThrow("NombreMascota")),
+            titulo = cursor.getString(cursor.getColumnIndexOrThrow("Titulo")),
+            descripcion = cursor.getString(cursor.getColumnIndexOrThrow("Descripcion")),
+            idTipoRecordatorio = cursor.getInt(cursor.getColumnIndexOrThrow("IdTipoRecordatorio")),
+            nombreTipoRecordatorio = cursor.getString(cursor.getColumnIndexOrThrow("NombreTipoRecordatorio")),
+            fechaInicio = cursor.getString(cursor.getColumnIndexOrThrow("FechaInicio")),
+            fechaFin = cursor.getString(cursor.getColumnIndexOrThrow("FechaFin")),
+            frecuencia = cursor.getString(cursor.getColumnIndexOrThrow("Frecuencia")),
+            activo = cursor.getInt(cursor.getColumnIndexOrThrow("Activo")) == 1
+        )
     }
 
     private fun getNow(): String {

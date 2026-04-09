@@ -3,6 +3,7 @@ package com.example.mypet
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -13,8 +14,13 @@ import com.example.mypet.dao.UsuarioDAO
 import com.example.mypet.firebase.AuthHelper
 import com.example.mypet.repository.MascotaFirestoreRepository
 import com.example.mypet.repository.UsuarioFirestoreRepository
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.GoogleAuthProvider
 
 class MainActivity : AppCompatActivity() {
     private lateinit var tilEmail: TextInputLayout
@@ -24,6 +30,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var btnLogin: Button
     private lateinit var btnRegister: Button
     private lateinit var tvRecoverPassword: TextView
+
+    private lateinit var ivGoogle : ImageView
+    private lateinit var googleClient : GoogleSignInClient
+    private lateinit var auth : FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,6 +47,15 @@ class MainActivity : AppCompatActivity() {
         btnLogin = findViewById(R.id.btnLogin)
         btnRegister = findViewById(R.id.btnRegister)
         tvRecoverPassword = findViewById(R.id.tvRecoverPassword)
+        ivGoogle = findViewById(R.id.ivGoogle)
+
+        auth = FirebaseAuth.getInstance()
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+            .requestEmail()
+            .build()
+
+        googleClient = GoogleSignIn.getClient(this, gso)
 
         btnLogin.setOnClickListener {
             val email = etEmail.text.toString().trim()
@@ -93,6 +112,10 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        ivGoogle.setOnClickListener {
+            startActivityForResult(googleClient.signInIntent, 1001)
+        }
+
         tvRecoverPassword.setOnClickListener {
             val intent = Intent(this, RecoverActivity::class.java)
             startActivity(intent)
@@ -111,6 +134,27 @@ class MainActivity : AppCompatActivity() {
         val currentUser = AuthHelper.auth.currentUser
         if (currentUser != null) {
             sincronizarUsuarioYMascotasYNavegar(currentUser.uid)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == 1001) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+            if (task.isSuccessful) {
+                val account = task.result
+                val credential = GoogleAuthProvider.getCredential(account.idToken, null)
+                auth.signInWithCredential(credential)
+                    .addOnSuccessListener {
+                        Toast.makeText(this@MainActivity, "Bienvenido de nuevo", Toast.LENGTH_SHORT).show()
+                        startActivity(Intent(this@MainActivity, MainActivity::class.java))
+                        finish()
+                    }
+                    .addOnFailureListener {
+                        Toast.makeText(this@MainActivity, "Error", Toast.LENGTH_SHORT).show()
+                    }
+            }
         }
     }
 

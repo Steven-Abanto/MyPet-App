@@ -85,6 +85,30 @@ class TipoRecordatorioDAO(context: Context) {
         return lista
     }
 
+    fun obtenerTodos(): List<TipoRecordatorio> {
+        val db = dbHelper.readableDatabase
+        val lista = mutableListOf<TipoRecordatorio>()
+
+        val cursor: Cursor = db.rawQuery(
+            "SELECT * FROM TipoRecordatorio ORDER BY Nombre ASC",
+            null
+        )
+
+        while (cursor.moveToNext()) {
+            lista.add(
+                TipoRecordatorio(
+                    idTipoRecordatorio = cursor.getInt(cursor.getColumnIndexOrThrow("IdTipoRecordatorio")),
+                    idCategoriaRecordatorio = cursor.getInt(cursor.getColumnIndexOrThrow("IdCategoriaRecordatorio")),
+                    nombre = cursor.getString(cursor.getColumnIndexOrThrow("Nombre"))
+                )
+            )
+        }
+
+        cursor.close()
+        db.close()
+        return lista
+    }
+
     fun obtenerPorId(idTipoRecordatorio: Int): TipoRecordatorio? {
         val db = dbHelper.readableDatabase
         val cursor: Cursor = db.rawQuery(
@@ -132,4 +156,44 @@ class TipoRecordatorioDAO(context: Context) {
         db.close()
         return tipo
     }
+
+    fun obtenerTodosConCategoria(): List<TipoRecordatorioConCategoria> {
+        val db = dbHelper.readableDatabase
+        val lista = mutableListOf<TipoRecordatorioConCategoria>()
+
+        val query = """
+            SELECT t.IdTipoRecordatorio,
+                   t.IdCategoriaRecordatorio,
+                   t.Nombre AS NombreTipo,
+                   c.Nombre AS NombreCategoria
+            FROM TipoRecordatorio t
+            INNER JOIN CategoriaRecordatorio c
+                ON t.IdCategoriaRecordatorio = c.IdCategoriaRecordatorio
+            ORDER BY c.Nombre ASC, t.Nombre ASC
+        """.trimIndent()
+
+        val cursor = db.rawQuery(query, null)
+
+        while (cursor.moveToNext()) {
+            lista.add(
+                TipoRecordatorioConCategoria(
+                    idTipoRecordatorio = cursor.getInt(cursor.getColumnIndexOrThrow("IdTipoRecordatorio")),
+                    idCategoriaRecordatorio = cursor.getInt(cursor.getColumnIndexOrThrow("IdCategoriaRecordatorio")),
+                    nombreTipo = cursor.getString(cursor.getColumnIndexOrThrow("NombreTipo")),
+                    nombreCategoria = cursor.getString(cursor.getColumnIndexOrThrow("NombreCategoria"))
+                )
+            )
+        }
+
+        cursor.close()
+        db.close()
+        return lista
+    }
+
+    data class TipoRecordatorioConCategoria(
+        val idTipoRecordatorio: Int,
+        val idCategoriaRecordatorio: Int,
+        val nombreTipo: String,
+        val nombreCategoria: String
+    )
 }
