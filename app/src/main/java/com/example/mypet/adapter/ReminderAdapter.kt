@@ -11,6 +11,7 @@ import com.example.mypet.entity.mappers.RecordatorioDetalle
 
 class ReminderAdapter(
     private val reminderList: List<RecordatorioDetalle>,
+    private val onClickRealizado: (RecordatorioDetalle) -> Unit,
     private val onLongClick: (RecordatorioDetalle) -> Unit
 ) : RecyclerView.Adapter<ReminderAdapter.ReminderViewHolder>() {
 
@@ -48,6 +49,10 @@ class ReminderAdapter(
             3 -> holder.ivReminderIcon.setImageResource(R.drawable.ic_bath)
             4 -> holder.ivReminderIcon.setImageResource(R.drawable.ic_food)
             else -> holder.ivReminderIcon.setImageResource(R.drawable.ic_reminder)
+        }
+
+        holder.itemView.setOnClickListener {
+            onClickRealizado(reminder)
         }
 
         holder.itemView.setOnLongClickListener {

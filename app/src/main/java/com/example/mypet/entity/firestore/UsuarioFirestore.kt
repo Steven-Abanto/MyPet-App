@@ -9,5 +9,6 @@ data class UsuarioFirestore(
     val telefono: String = "",
     val fechaNacimiento: String = "",
     val pronombre: String = "",
-    val activo: Boolean = true
+    val activo: Boolean = true,
+    val fotoPerfilUrl: String = ""
 )

@@ -83,7 +83,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
         val firebaseUid = currentUser.uid
 
-        cargarFotoGuardada()
+        cargarFotoGuardada(firebaseUid)
         sincronizarEmailAuthConFirestore {
             FirestoreHelper.db.collection("usuarios")
                 .document(firebaseUid)
@@ -210,16 +210,46 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         prefs.edit().putString("profile_image_path", path).apply()
     }
 
-    private fun cargarFotoGuardada() {
+    private fun cargarFotoGuardada(firebaseUid: String) {
         val prefs = requireContext().getSharedPreferences("mypet_profile", Context.MODE_PRIVATE)
         val path = prefs.getString("profile_image_path", null)
 
         if (!path.isNullOrEmpty()) {
             mostrarFotoDesdeArchivo(path)
         } else {
-            ivProfilePic.visibility = View.GONE
-            lottieProfile.visibility = View.VISIBLE
+            // Si no hay foto local → intentar cargar desde Firestore
+            FirestoreHelper.db.collection("usuarios")
+                .document(firebaseUid)
+                .get()
+                .addOnSuccessListener { document ->
+                    if (document.exists()) {
+                        val usuario = document.toObject(UsuarioFirestore::class.java)
+
+                        val url = usuario?.fotoPerfilUrl ?: ""
+
+                        if (url.isNotEmpty()) {
+                            mostrarFotoDesdeUrl(url)
+                        } else {
+                            ivProfilePic.visibility = View.GONE
+                            lottieProfile.visibility = View.VISIBLE
+                        }
+                    }
+                }
+                .addOnFailureListener {
+                    ivProfilePic.visibility = View.GONE
+                    lottieProfile.visibility = View.VISIBLE
+                }
         }
+    }
+
+    private fun mostrarFotoDesdeUrl(url: String) {
+        ivProfilePic.visibility = View.VISIBLE
+        lottieProfile.visibility = View.GONE
+
+        Glide.with(this)
+            .load(url)
+            .circleCrop()
+            .into(ivProfilePic)
     }
 
     private fun mostrarFotoDesdeArchivo(path: String) {

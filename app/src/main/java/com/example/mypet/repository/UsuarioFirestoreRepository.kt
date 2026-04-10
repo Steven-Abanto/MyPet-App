@@ -72,6 +72,7 @@ class UsuarioFirestoreRepository {
     ) {
         val uid = firebaseUser.uid
         val email = firebaseUser.email ?: ""
+        val fotoGoogle = firebaseUser.photoUrl?.toString() ?: ""
 
         obtenerUsuario(uid) { usuarioFirestore, error ->
             if (error != null) {
@@ -119,7 +120,8 @@ class UsuarioFirestoreRepository {
                 telefono = "",
                 fechaNacimiento = "",
                 pronombre = "",
-                activo = true
+                activo = true,
+                fotoPerfilUrl = fotoGoogle
             )
 
             guardarUsuario(nuevoUsuarioFirestore) { okGuardar, errorGuardar ->

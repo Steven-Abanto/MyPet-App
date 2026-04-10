@@ -18,30 +18,38 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mypet.adapter.ReminderAdapter
+import com.example.mypet.dao.HistorialRecordatorioDAO
 import com.example.mypet.dao.MascotaDAO
 import com.example.mypet.dao.RecordatorioDAO
 import com.example.mypet.dao.TipoRecordatorioDAO
 import com.example.mypet.dao.UsuarioDAO
+import com.example.mypet.entity.HistorialRecordatorio
 import com.example.mypet.entity.Recordatorio
+import com.example.mypet.entity.firestore.HistorialRecordatorioFirestore
 import com.example.mypet.entity.firestore.RecordatorioFirestore
 import com.example.mypet.entity.mappers.RecordatorioDetalle
 import com.example.mypet.firebase.AuthHelper
+import com.example.mypet.repository.HistorialRecordatorioFirestoreRepository
 import com.example.mypet.repository.RecordatorioFirestoreRepository
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.button.MaterialButton
+import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Date
 import java.util.Locale
+import java.util.TimeZone
 
 class ReminderActivity : AppCompatActivity() {
 
     private lateinit var rvReminders: RecyclerView
     private lateinit var reminderAdapter: ReminderAdapter
-
     private lateinit var recordatorioDAO: RecordatorioDAO
+    private lateinit var historialDAO: HistorialRecordatorioDAO
     private lateinit var usuarioDAO: UsuarioDAO
     private lateinit var mascotaDAO: MascotaDAO
     private lateinit var tipoDAO: TipoRecordatorioDAO
     private lateinit var repo: RecordatorioFirestoreRepository
+    private lateinit var historialRepo: HistorialRecordatorioFirestoreRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,6 +57,8 @@ class ReminderActivity : AppCompatActivity() {
         setContentView(R.layout.activity_reminder)
 
         recordatorioDAO = RecordatorioDAO(this)
+        historialDAO = HistorialRecordatorioDAO(this)
+        historialRepo = HistorialRecordatorioFirestoreRepository(this)
         usuarioDAO = UsuarioDAO(this)
         mascotaDAO = MascotaDAO(this)
         tipoDAO = TipoRecordatorioDAO(this)
@@ -72,15 +82,18 @@ class ReminderActivity : AppCompatActivity() {
         super.onResume()
         cargarLocal()
         sincronizar()
+        sincronizarHistorial()
     }
 
     private fun setupRecycler() {
         rvReminders = findViewById(R.id.rvReminders)
         rvReminders.layoutManager = LinearLayoutManager(this)
 
-        reminderAdapter = ReminderAdapter(emptyList()) { recordatorio ->
-            mostrarOpciones(recordatorio)
-        }
+        reminderAdapter = ReminderAdapter(
+            emptyList(),
+            onClickRealizado = { recordatorio -> confirmarMarcarRealizado(recordatorio) },
+            onLongClick = { recordatorio -> mostrarOpciones(recordatorio) }
+        )
 
         rvReminders.adapter = reminderAdapter
     }
@@ -90,9 +103,11 @@ class ReminderActivity : AppCompatActivity() {
 
         val lista = recordatorioDAO.obtenerRecordatoriosPorUsuario(usuario.idUsuario)
 
-        reminderAdapter = ReminderAdapter(lista) { recordatorio ->
-            mostrarOpciones(recordatorio)
-        }
+        reminderAdapter = ReminderAdapter(
+            lista,
+            onClickRealizado = { recordatorio -> confirmarMarcarRealizado(recordatorio) },
+            onLongClick = { recordatorio -> mostrarOpciones(recordatorio) }
+        )
 
         rvReminders.adapter = reminderAdapter
     }
@@ -113,6 +128,26 @@ class ReminderActivity : AppCompatActivity() {
                     Toast.makeText(
                         this,
                         error ?: "No se pudo sincronizar recordatorios",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        }
+    }
+
+    private fun sincronizarHistorial() {
+        val uid = AuthHelper.auth.currentUser?.uid
+
+        if (uid.isNullOrEmpty()) {
+            return
+        }
+
+        historialRepo.sincronizarHistorialDeUsuarioALocal(uid) { ok, error ->
+            runOnUiThread {
+                if (!ok) {
+                    Toast.makeText(
+                        this,
+                        error ?: "No se pudo sincronizar historial",
                         Toast.LENGTH_SHORT
                     ).show()
                 }
@@ -282,6 +317,103 @@ class ReminderActivity : AppCompatActivity() {
         dialog.show()
     }
 
+    private fun confirmarMarcarRealizado(recordatorio: RecordatorioDetalle) {
+        AlertDialog.Builder(this)
+            .setTitle("Marcar como realizado")
+            .setMessage("¿Deseas marcar \"${recordatorio.titulo}\" como realizado?")
+            .setPositiveButton("Sí") { _, _ ->
+                marcarComoRealizado(recordatorio)
+            }
+            .setNegativeButton("No", null)
+            .show()
+    }
+
+    private fun marcarComoRealizado(recordatorio: RecordatorioDetalle) {
+        val uid = AuthHelper.auth.currentUser?.uid
+        if (uid.isNullOrEmpty()) {
+            Toast.makeText(this, "No hay usuario autenticado", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val firestoreId = recordatorio.firestoreId
+        if (firestoreId.isNullOrEmpty()) {
+            Toast.makeText(this, "El recordatorio no tiene FirestoreId", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val ahora = getNow()
+
+        val historialLocal = HistorialRecordatorio(
+            idRecordatorio = recordatorio.idRecordatorio,
+            fechaProgramada = recordatorio.fechaInicio,
+            fechaCompletado = ahora,
+            notas = "Marcado como realizado desde ReminderActivity",
+            estado = "COMPLETADO",
+            fechaCreacion = ahora,
+            ultimaModificacion = ahora,
+            activo = true
+        )
+
+        val historialFirestore = HistorialRecordatorioFirestore(
+            uidUsuario = uid,
+            recordatorioFirestoreId = firestoreId,
+            fechaProgramada = recordatorio.fechaInicio,
+            fechaCompletado = ahora,
+            notas = "Marcado como realizado desde ReminderActivity",
+            estado = "COMPLETADO",
+            fechaCreacion = ahora,
+            ultimaModificacion = ahora,
+            activo = true
+        )
+
+        historialRepo.registrarHistorial(
+            historialFirestore = historialFirestore,
+            historialLocalBase = historialLocal
+        ) { okHistorial, errorHistorial ->
+            runOnUiThread {
+                if (!okHistorial) {
+                    Toast.makeText(
+                        this,
+                        errorHistorial ?: "No se pudo registrar el historial",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    return@runOnUiThread
+                }
+
+                val frecuencia = recordatorio.frecuencia ?: "UNA_VEZ"
+
+                if (frecuencia == "UNA_VEZ") {
+                    repo.desactivarRecordatorio(firestoreId) { okDesactivar, errorDesactivar ->
+                        runOnUiThread {
+                            if (okDesactivar) {
+                                Toast.makeText(
+                                    this,
+                                    "Recordatorio marcado como realizado",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                cargarLocal()
+                            } else {
+                                Toast.makeText(
+                                    this,
+                                    errorDesactivar
+                                        ?: "Se registró el historial, pero no se pudo desactivar el recordatorio",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        }
+                    }
+                } else {
+                    Toast.makeText(
+                        this,
+                        "Recordatorio marcado como realizado",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    cargarLocal()
+                }
+            }
+        }
+    }
+
     private fun mostrarDatePicker(target: EditText) {
         val calendar = Calendar.getInstance()
 
@@ -313,20 +445,45 @@ class ReminderActivity : AppCompatActivity() {
 
         val tvTitulo = view.findViewById<TextView>(R.id.tvTitulo)
         val btnEliminar = view.findViewById<MaterialButton>(R.id.mbEliminar)
+        val btnMarcarRealizado = view.findViewById<MaterialButton>(R.id.mbMarcar)
 
         tvTitulo.text = "Opciones para ${recordatorio.titulo}"
 
-        btnEliminar.setOnClickListener {
-            val filas = recordatorioDAO.desactivar(recordatorio.idRecordatorio)
+        btnMarcarRealizado.setOnClickListener {
+            confirmarMarcarRealizado(recordatorio)
+            dialog.dismiss()
+        }
 
-            if (filas > 0) {
-                Toast.makeText(this, "Recordatorio desactivado", Toast.LENGTH_SHORT).show()
-                cargarLocal()
-            } else {
-                Toast.makeText(this, "No se pudo desactivar el recordatorio", Toast.LENGTH_SHORT).show()
+        btnEliminar.setOnClickListener {
+            val firestoreId = recordatorio.firestoreId
+
+            if (firestoreId.isNullOrEmpty()) {
+                val filas = recordatorioDAO.desactivar(recordatorio.idRecordatorio)
+                if (filas > 0) {
+                    Toast.makeText(this, "Recordatorio desactivado", Toast.LENGTH_SHORT).show()
+                    cargarLocal()
+                } else {
+                    Toast.makeText(this, "No se pudo desactivar el recordatorio", Toast.LENGTH_SHORT).show()
+                }
+                dialog.dismiss()
+                return@setOnClickListener
             }
 
-            dialog.dismiss()
+            repo.desactivarRecordatorio(firestoreId) { ok, error ->
+                runOnUiThread {
+                    if (ok) {
+                        Toast.makeText(this, "Recordatorio desactivado", Toast.LENGTH_SHORT).show()
+                        cargarLocal()
+                    } else {
+                        Toast.makeText(
+                            this,
+                            error ?: "No se pudo desactivar el recordatorio",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                    dialog.dismiss()
+                }
+            }
         }
 
         dialog.show()
@@ -354,6 +511,12 @@ class ReminderActivity : AppCompatActivity() {
                 else -> false
             }
         }
+    }
+
+    private fun getNow(): String {
+        val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US)
+        sdf.timeZone = TimeZone.getTimeZone("UTC")
+        return sdf.format(Date())
     }
 
     data class MascotaSpinnerItem(

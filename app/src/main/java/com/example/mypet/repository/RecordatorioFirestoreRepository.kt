@@ -106,4 +106,40 @@ class RecordatorioFirestoreRepository(private val context: Context) {
                 onResult(false, e.message)
             }
     }
+
+    fun desactivarRecordatorio(
+        firestoreId: String,
+        onResult: (Boolean, String?) -> Unit
+    ) {
+        recordatoriosRef.document(firestoreId)
+            .update(
+                mapOf(
+                    "activo" to false,
+                    "ultimaModificacion" to getNow()
+                )
+            )
+            .addOnSuccessListener {
+                val recordatorioLocal = recordatorioDAO.obtenerPorFirestoreId(firestoreId)
+
+                if (recordatorioLocal != null) {
+                    val filas = recordatorioDAO.desactivar(recordatorioLocal.idRecordatorio)
+                    if (filas > 0) {
+                        onResult(true, null)
+                    } else {
+                        onResult(false, "Se desactivó en Firestore, pero falló la desactivación local")
+                    }
+                } else {
+                    onResult(false, "Se desactivó en Firestore, pero no se encontró el recordatorio local")
+                }
+            }
+            .addOnFailureListener { e ->
+                onResult(false, e.message)
+            }
+    }
+
+    private fun getNow(): String {
+        val sdf = java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss", java.util.Locale.US)
+        sdf.timeZone = java.util.TimeZone.getTimeZone("UTC")
+        return sdf.format(java.util.Date())
+    }
 }
