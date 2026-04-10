@@ -26,7 +26,6 @@ import android.widget.LinearLayout
 import com.example.mypet.dao.UsuarioDAO
 import com.example.mypet.entity.Usuario
 import com.bumptech.glide.Glide
-import com.google.firebase.storage.FirebaseStorage
 import java.io.File
 import java.io.FileOutputStream
 
@@ -46,9 +45,6 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                     )
                 } catch (_: Exception) {
                 }
-
-//                guardarUriFoto(uri.toString())
-//                mostrarFotoPerfil(uri)
                 guardarImagenInterna(uri)
             }
         }

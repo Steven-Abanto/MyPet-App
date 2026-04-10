@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">MyPet</string>
 
- <!-- Seleccionar género -->
+    <!-- Seleccionar género -->
     <string-array name="gender_options">
         <item>Él</item>
         <item>Ella</item>

@@ -5,6 +5,7 @@ import android.content.Context
 import android.database.Cursor
 import com.example.idatdemo.data.AppDatabaseHelper
 import com.example.mypet.entity.HistorialRecordatorio
+import com.example.mypet.entity.mappers.HistorialRecordatorioDetalle
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -152,6 +153,49 @@ class HistorialRecordatorioDAO(context: Context) {
             ultimaModificacion = cursor.getString(cursor.getColumnIndexOrThrow("UltimaModificacion")),
             activo = cursor.getInt(cursor.getColumnIndexOrThrow("Activo")) == 1
         )
+    }
+
+    fun obtenerHistorialCompletadoPorUsuario(idUsuario: Int): List<HistorialRecordatorioDetalle> {
+        val db = dbHelper.readableDatabase
+        val lista = mutableListOf<HistorialRecordatorioDetalle>()
+
+        val query = """
+        SELECT h.IdHistorial, h.FirestoreId, h.IdRecordatorio,
+               r.Titulo AS TituloRecordatorio,
+               m.Nombres AS NombreMascota,
+               h.FechaProgramada, h.FechaCompletado, h.Notas,
+               h.Estado, h.FechaCreacion, h.UltimaModificacion, h.Activo
+        FROM Historial_Recordatorio h
+        INNER JOIN Recordatorio r ON h.IdRecordatorio = r.IdRecordatorio
+        INNER JOIN Mascota m ON r.IdMascota = m.IdMascota
+        WHERE m.IdUsuario = ? AND h.Estado = 'COMPLETADO'
+        ORDER BY h.FechaCompletado DESC, h.IdHistorial DESC
+    """.trimIndent()
+
+        val cursor = db.rawQuery(query, arrayOf(idUsuario.toString()))
+
+        while (cursor.moveToNext()) {
+            lista.add(
+                HistorialRecordatorioDetalle(
+                    idHistorial = cursor.getInt(cursor.getColumnIndexOrThrow("IdHistorial")),
+                    firestoreId = cursor.getString(cursor.getColumnIndexOrThrow("FirestoreId")),
+                    idRecordatorio = cursor.getInt(cursor.getColumnIndexOrThrow("IdRecordatorio")),
+                    tituloRecordatorio = cursor.getString(cursor.getColumnIndexOrThrow("TituloRecordatorio")),
+                    nombreMascota = cursor.getString(cursor.getColumnIndexOrThrow("NombreMascota")),
+                    fechaProgramada = cursor.getString(cursor.getColumnIndexOrThrow("FechaProgramada")),
+                    fechaCompletado = cursor.getString(cursor.getColumnIndexOrThrow("FechaCompletado")),
+                    notas = cursor.getString(cursor.getColumnIndexOrThrow("Notas")),
+                    estado = cursor.getString(cursor.getColumnIndexOrThrow("Estado")),
+                    fechaCreacion = cursor.getString(cursor.getColumnIndexOrThrow("FechaCreacion")),
+                    ultimaModificacion = cursor.getString(cursor.getColumnIndexOrThrow("UltimaModificacion")),
+                    activo = cursor.getInt(cursor.getColumnIndexOrThrow("Activo")) == 1
+                )
+            )
+        }
+
+        cursor.close()
+        db.close()
+        return lista
     }
 
     private fun getNow(): String {
