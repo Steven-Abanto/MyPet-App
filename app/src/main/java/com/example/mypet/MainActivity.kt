@@ -2,6 +2,7 @@ package com.example.mypet
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
@@ -17,6 +18,7 @@ import com.example.mypet.repository.UsuarioFirestoreRepository
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.FirebaseAuth
@@ -34,6 +36,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var ivGoogle : ImageView
     private lateinit var googleClient : GoogleSignInClient
     private lateinit var auth : FirebaseAuth
+    private var loginGoogleEnProceso = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -113,6 +116,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         ivGoogle.setOnClickListener {
+            loginGoogleEnProceso = true
             startActivityForResult(googleClient.signInIntent, 1001)
         }
 
@@ -131,6 +135,8 @@ class MainActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
 
+        if (loginGoogleEnProceso) return
+
         val currentUser = AuthHelper.auth.currentUser
         if (currentUser != null) {
             sincronizarUsuarioYMascotasYNavegar(currentUser.uid)
@@ -142,18 +148,44 @@ class MainActivity : AppCompatActivity() {
 
         if (requestCode == 1001) {
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
-            if (task.isSuccessful) {
-                val account = task.result
+            try {
+                val account = task.getResult(ApiException::class.java)
                 val credential = GoogleAuthProvider.getCredential(account.idToken, null)
                 auth.signInWithCredential(credential)
                     .addOnSuccessListener {
-                        Toast.makeText(this@MainActivity, "Bienvenido de nuevo", Toast.LENGTH_SHORT).show()
-                        startActivity(Intent(this@MainActivity, MainActivity::class.java))
-                        finish()
+                        val firebaseUser = auth.currentUser
+                        if (firebaseUser == null) {
+                            loginGoogleEnProceso = false
+                            Toast.makeText(this, "No se pudo obtener el usuario autenticado", Toast.LENGTH_LONG).show()
+                            return@addOnSuccessListener
+                        }
+
+                        val usuarioRepository = UsuarioFirestoreRepository()
+
+                        usuarioRepository.registrarOSincronizarUsuarioGoogle(this, firebaseUser) { ok, error ->
+                            runOnUiThread {
+                                if (!ok) {
+                                    loginGoogleEnProceso = false
+                                    Toast.makeText(
+                                        this,
+                                        "Error al registrar/sincronizar usuario Google: $error",
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                    return@runOnUiThread
+                                }
+                                loginGoogleEnProceso = false
+                                sincronizarUsuarioYMascotasYNavegar(firebaseUser.uid)
+                            }
+                        }
                     }
-                    .addOnFailureListener {
-                        Toast.makeText(this@MainActivity, "Error", Toast.LENGTH_SHORT).show()
+                    .addOnFailureListener { e ->
+                        loginGoogleEnProceso = false
+                        Toast.makeText(this, "Firebase error: ${e.message}", Toast.LENGTH_LONG).show()
                     }
+
+            } catch (e: ApiException) {
+                loginGoogleEnProceso = false
+                Toast.makeText(this, "Google Sign-In error: ${e.statusCode}", Toast.LENGTH_LONG).show()
             }
         }
     }
